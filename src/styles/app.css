@@ -1,0 +1,20 @@
+body{
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "PT Sans", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #1f41a9;
+    background-image: url(../assets/background.svg);
+}
+
+
+.login-container {
+    border: 1px solid white; /* Add a border to the container */
+    width: 70vw; /* Set the width to 70% of the viewport width */
+    height: 50vh; /* Set the height to 50% of the viewport height */
+    border-radius: 10px;
+    display: flex; /* Make the container a flex container */
+    flex-direction: column; /* Stack children vertically */
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+}
