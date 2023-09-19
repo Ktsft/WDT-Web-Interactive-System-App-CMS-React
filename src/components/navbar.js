@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { User } from "../profile/index";
+import { User, CreateRoom } from "../profile/index";
 import { Modal } from "./modal";
 import { UserIcon, CreateIcon, LogOutIcon } from "../assets/icon";
 
@@ -9,6 +9,11 @@ export const Navbar = ({ username }) => {
     const history = useHistory();
     const [expanded, setExpanded] = useState(false); 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalContent, setModalContent] = useState(null); 
+    const [modalWidth, setModalWidth] = useState('400px'); // Default width
+    const [modalHeight, setModalHeight] = useState('200px'); // Default height
+    const [modalTitle, setModalTitle] = useState('');
+  
 
     const onHandleLogOut = () => {
         localStorage.removeItem('token');
@@ -21,8 +26,20 @@ export const Navbar = ({ username }) => {
     };
 
 
-    const toggleModal = () => {
-        setIsModalOpen(!isModalOpen);  
+    const toggleModal = (content, width, height, title) => {
+
+        // if(action === 'username'){
+        //     setModalContent(<User onCloseModal={onCloseModal}  />)
+        // }else if(action === 'createRoom'){
+        //     setModalContent(<createRoom />)
+        // }
+
+        // setIsModalOpen(!isModalOpen); 
+        setModalContent(content);
+        setModalWidth(width);
+        setModalHeight(height);
+        setIsModalOpen(true); 
+        setModalTitle(title);
     };
 
 
@@ -37,7 +54,7 @@ export const Navbar = ({ username }) => {
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <UserIcon style={{ marginRight: '10px' }} />
-                    <a className="navbar-brand" href="#" onClick={toggleModal}>
+                    <a className="navbar-brand" href="#" onClick={() =>toggleModal(<User onCloseModal={onCloseModal} />,'700px','900px', 'Information')}>
                         {username}
                     </a>
                 </div>
@@ -49,7 +66,7 @@ export const Navbar = ({ username }) => {
                         <li className="nav-item active">
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <CreateIcon style={{ marginRight: '1px' }} />
-                                <a className="nav-link" href="#" >Create Room <span className="sr-only"></span></a>
+                                <a className="nav-link" href="#" onClick={() =>toggleModal(<CreateRoom onCloseModal={onCloseModal} />,'700px','1500px', 'Create Room')} >Create Room <span className="sr-only"></span></a>
                             </div>   
                         </li>
                         <li className="nav-item">
@@ -63,13 +80,21 @@ export const Navbar = ({ username }) => {
             </nav>
 
             {isModalOpen && (
-                <Modal 
+                // <Modal 
+                //     show={isModalOpen}
+                //     onHide={toggleModal}
+                //     title="Information"
+                //     width="700px"
+                //     height="900px"
+                //     content={modalContent} 
+                // />
+                <Modal
                     show={isModalOpen}
-                    onHide={toggleModal}
-                    title="Information"
-                    width="700px"
-                    height="900px"
-                    content={<User onCloseModal={onCloseModal}  />}
+                    onHide={onCloseModal}
+                    title={modalTitle}
+                    width={modalWidth}
+                    height={modalHeight}
+                    content={modalContent}
                 />
             )}
 
