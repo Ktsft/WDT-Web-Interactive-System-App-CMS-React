@@ -1,16 +1,23 @@
 import { getAllByDisplayValue, waitFor } from '@testing-library/react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useState } from 'react';
-import '../styles/app.css';
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { UserIcon, PasswordIcon, EmailIcon, AuthenticatePassIcon } from '../assets/icon';
-// import { Button } from '../components/button';
-import { Button, Loading } from '../components/index';
-
+import { Button, Loading, Modal } from '../components/index';
+import { useUser } from './userProvider';
+import '../styles/app.css';
 
 import Axios from 'axios'; // Import Axios
 
 
 export const Login = () => {
+
+    useEffect(() => {
+        document.title = 'Login';
+        return () => {
+            document.title = 'Login'; // Set your default title here
+        };
+    }, []);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -19,7 +26,11 @@ export const Login = () => {
     const [isLoginActive, setIsLoginActive] = useState(true);
     const [isRegistrationActive, setIsRegistrationActive] = useState(false);
     const [loading, setLoading] = useState(false);
-
+    const [showModal, setShowModal] = useState(false);
+    const [modalContent, setModalContent] = useState('');
+    
+    const history = useHistory(); 
+    const { login } = useUser(); 
 
     const clearInput = () => {
         setEmail('');
@@ -61,6 +72,7 @@ export const Login = () => {
         setIsLoginActive(true);
         setIsRegistrationActive(false);
         clearInput();
+        document.title = 'Login'; 
     };
 
     
@@ -68,6 +80,7 @@ export const Login = () => {
         setIsLoginActive(false);
         setIsRegistrationActive(true);
         clearInput();
+        document.title = 'Register'; 
     };
 
 
@@ -75,11 +88,10 @@ export const Login = () => {
         
         setLoading(true);
         if(isRegistrationActive){
-            console.log("step 1");
             console.log("this is the password: ", password);
             console.log("this is the confirm pass: ", confirmPassword);
             if (password === confirmPassword) {
-                console.log("i have access register submit");
+                
             
                 Axios.post("https://web-intractive-system-app-api.onrender.com/user/create", {
                     email: email,
@@ -94,6 +106,11 @@ export const Login = () => {
                     .then(response => {
                         setLoading(false);
                         console.log("Success","Register account successfully")
+                        // window.location.reload(); // Reload the current page
+                        setIsLoginActive(true);
+                        setIsRegistrationActive(false);
+                        setEmail('');
+                        setPassword('');                        
                         // showModal(response.data)
                         // window.location.href = 'login.html';
                     })
@@ -104,7 +121,7 @@ export const Login = () => {
             }
 
         }else{
-
+            
             Axios.post("https://web-intractive-system-app-api.onrender.com/user/login", {
             email: email, password: password
             },{
@@ -117,21 +134,32 @@ export const Login = () => {
                 localStorage.setItem("token", response.data.data.token);
                 // window.location.href = "admin.html";
                 setLoading(false);
+                let userId = response.data.data.userId;
+                login(userId);
                 console.log("U have login successfully");
+                history.push('/dashboard');
             })
             .catch(error => {
                 console.log("Error catch from login: ", error.response.data);
+                showLoginFailedModal(error.response.data);
+                setLoading(false);
+                setPassword('');
                 // showModal("Login error: ",error.response.data)
             });
 
         }
+    };
 
 
+
+    const showLoginFailedModal = (errorMessage) =>{
+        setModalContent(errorMessage);
+        setShowModal(true);
     };
 
 
     const registrationForm = (
-        <div style={{ width: '100%' }}>
+        <div style={{ width: '100%' }} className="login-body">
             <div className="input-group flex-nowrap mb-3 justify-content-center"> {/* Add justify-content-center */}
                 <span className="input-group-text"><EmailIcon /></span>
                 <input type="text" className="form-control" placeholder="Email" aria-label="Email" aria-describedby="addon-wrapping" onChange={onChangeEmail} disabled={loading} value={email}  />
@@ -154,6 +182,7 @@ export const Login = () => {
 
     return (
         <div>
+            {loading && (<div className="loading-overlay"></div>)}
             <Loading show={loading}/>
             <div className="login-body d-flex justify-content-center align-items-center vh-100">
                 <form>
@@ -182,6 +211,16 @@ export const Login = () => {
                     </div>
                 </form>
             </div>
+        
+            <Modal 
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                title="Login Failed"
+                content={modalContent}
+                width="400px"
+                height="200px"
+            />
+        
         </div>
     );
 };
