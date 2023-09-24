@@ -2,7 +2,7 @@ import React , { useState } from 'react';
 import TableRow from './tableRow';
 
 
-export const Table = ({ data }) =>{
+export const Table = ({ data, onRefresh }) =>{
 
 
     const itemsPerPage = 10; // Number of items to display per page
@@ -34,7 +34,7 @@ export const Table = ({ data }) =>{
                 </thead>
                 <tbody>
                 {itemsToDisplay.map((item, index) => (
-                    <TableRow key={index} item={item} />
+                    <TableRow key={index} item={item} onRefresh={onRefresh} />
                 ))}
                 </tbody>
             </table>

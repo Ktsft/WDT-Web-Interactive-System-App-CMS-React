@@ -15,7 +15,7 @@ function secondsToHHMMSS(seconds) {
 
 
 
-function TableRow({ item }) {
+function TableRow({ item, onRefresh }) {
 
   const remainingDuration = secondsToHHMMSS(item.end_date - Math.floor(Date.now() / 1000));
   
@@ -60,6 +60,22 @@ function TableRow({ item }) {
 
 
 
+  const onHandleRemoveRoom = (roomId) =>{
+      console.log("roomId from onHandleRemoveRoom function: ", roomId);
+      Axios.post("https://web-intractive-system-app-api.onrender.com/room/delete/"+roomId, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      .then(response => {
+        // window.location.href = 'admin.html';
+        console.log("deleted successfully");
+        onRefresh();
+      })
+      .catch(error => {
+          console.log(error);
+      });
+  };
+
+
 
   return (
     <tr>
@@ -101,7 +117,7 @@ function TableRow({ item }) {
           <BookIcon/>
         </button>
         <span style={{ marginLeft: '10px' }}></span>
-        <button className="btn btn-outline-danger" id={`gearButton_${item.id}`}>
+        <button className="btn btn-outline-danger" id={`gearButton_${item.id}`} onClick={() => onHandleRemoveRoom(item.id)}>
           <TrashIcon/>
         </button>
         <span style={{ marginLeft: '10px' }}></span>

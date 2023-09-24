@@ -83,9 +83,9 @@
                 <Loading show={loading}/>
                 <div style={{ paddingTop: '95px' }}>
                     <div className="container dashboard-container">
-                        <Navbar onShowModal={toggleModal}  username={ username? username:''} />
+                        <Navbar onShowModal={toggleModal}  username={ username? username:''} onRefresh={getAllRoom} />
                         <div className="table-container">
-                            <Table data={room} />
+                            <Table data={room} onRefresh={getAllRoom} />
                         </div>
                     </div>
                 </div>

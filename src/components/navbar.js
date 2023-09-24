@@ -4,7 +4,7 @@ import { User, CreateRoom } from "../profile/index";
 import { Modal } from "./modal";
 import { UserIcon, CreateIcon, LogOutIcon } from "../assets/icon";
 
-export const Navbar = ({ username }) => {
+export const Navbar = ({ username, onRefresh }) => {
 
     const history = useHistory();
     const [expanded, setExpanded] = useState(false); 
@@ -13,7 +13,9 @@ export const Navbar = ({ username }) => {
     const [modalWidth, setModalWidth] = useState('400px'); // Default width
     const [modalHeight, setModalHeight] = useState('200px'); // Default height
     const [modalTitle, setModalTitle] = useState('');
-  
+    
+
+    const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false); 
 
     const onHandleLogOut = () => {
         localStorage.removeItem('token');
@@ -45,6 +47,7 @@ export const Navbar = ({ username }) => {
 
     const onCloseModal = () => {
         // console.log("this is the on close modal pressed");
+        onRefresh();
         setIsModalOpen(false);
     };
 
