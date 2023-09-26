@@ -1,5 +1,7 @@
 import React , { useState, useEffect } from 'react';
 import { GearIcon, BookIcon, TrashIcon, QrCodeIcon } from '../assets/icon';
+import { Modal, Loading } from '../components/index';
+import { RoomSetting } from "../profile/index";
 
 import Axios from 'axios';
 
@@ -15,13 +17,21 @@ function secondsToHHMMSS(seconds) {
 
 
 
-function TableRow({ item, onRefresh }) {
+function TableRow({ item, onRefresh, onRowClick }) {
 
   const remainingDuration = secondsToHHMMSS(item.end_date - Math.floor(Date.now() / 1000));
   
   const [roomStatus, setRoomStatus] = useState(item.room_status);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Adjust as needed
+
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
+  const [modalContent, setModalContent] = useState(''); // Content for the modal
+  const [modalTitle, setModalTitle] = useState(''); // Title for the modal
+  const [modalWidth, setModalWidth] = useState(''); // Width for the modal
+  const [modalHeight, setModalHeight] = useState(''); // Height for the modal
+
+
 
   const token = localStorage.getItem('token');
 
@@ -76,9 +86,31 @@ function TableRow({ item, onRefresh }) {
   };
 
 
+  
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+
+  
+  const onCloseModal = () => {
+    // console.log("this is the on close modal pressed");
+    // onRefresh(true);
+    setIsModalOpen(false);
+};
+
+
+  // const toggleModal = (content, width, height, title) => {
+  //     setModalContent(content);
+  //     setModalWidth(width);
+  //     setModalHeight(height);
+  //     setIsModalOpen(true);
+  //     setModalTitle(title);
+  // };
+
 
   return (
-    <tr>
+    <tr onClick={() => onRowClick(item.id)}>
       <th scope="row">{item.id}</th>
       <td>{item.room_name}</td>
       <td>{remainingDuration}</td>

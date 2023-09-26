@@ -76,3 +76,17 @@ body{
     background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
     z-index: 9999; /* Ensure it's above other elements */
 }
+
+.mode-label {
+    margin-left: 10px; /* Adjust the margin as needed */
+}
+
+
+.mode-image {
+    margin-left: 30px; /* Adjust the margin as needed */
+}
+
+
+.mode-color {
+    margin-left: 100px; /* Adjust the margin as needed */
+}

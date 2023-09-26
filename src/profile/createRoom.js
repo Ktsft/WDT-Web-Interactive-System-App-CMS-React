@@ -126,7 +126,7 @@ export const CreateRoom = (props) => {
                 </tr>
                 <tr>
                     <th className="user-table-label-cell" style={{ padding: '10px' }}>Room Description:</th>
-                    <td><input type="text" name="roomDesc" className="form-control" /></td>
+                    <td><input type="text" name="roomDesc" className="form-control" onChange={onHandleRoomDescriptionChange} /></td>
                 </tr>
                 <tr>
                     <th className="user-table-label-cell" style={{ padding: '10px' }}>Restricted Word:</th>

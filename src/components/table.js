@@ -1,5 +1,7 @@
 import React , { useState } from 'react';
+import { Modal } from '../components/index';
 import TableRow from './tableRow';
+import { RoomSetting } from '../profile';
 
 
 export const Table = ({ data, onRefresh }) =>{
@@ -7,6 +9,13 @@ export const Table = ({ data, onRefresh }) =>{
 
     const itemsPerPage = 10; // Number of items to display per page
     const [currentPage, setCurrentPage] = useState(1);
+
+    const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
+    const [modalContent, setModalContent] = useState(''); // Content for the modal
+    const [modalTitle, setModalTitle] = useState(''); // Title for the modal
+    const [modalWidth, setModalWidth] = useState(''); // Width for the modal
+    const [modalHeight, setModalHeight] = useState(''); // Height for the modal
+    const [selectedId, setSelectedId] = useState(null);
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -19,6 +28,30 @@ export const Table = ({ data, onRefresh }) =>{
           setCurrentPage(newPage);
         }
     };
+
+
+    const toggleModal = (content, width, height, title) => {
+        setModalContent(content);
+        setModalWidth(width);
+        setModalHeight(height);
+        setIsModalOpen(true);
+        setModalTitle(title);
+    };
+
+
+    const onCloseModal = () => {
+        // console.log("this is the on close modal pressed");
+        setIsModalOpen(false);
+    };
+
+
+    const handleRowClick = (id) => {
+        console.log("i have access the handle row click: ", id);
+        setSelectedId(id); // Set the selected ID
+        toggleModal(<RoomSetting id={id} onClose={onCloseModal} />, '1000px', '1500px', 'Room Setting');
+      };
+
+
 
     return(
         <div>
@@ -34,7 +67,7 @@ export const Table = ({ data, onRefresh }) =>{
                 </thead>
                 <tbody>
                 {itemsToDisplay.map((item, index) => (
-                    <TableRow key={index} item={item} onRefresh={onRefresh} />
+                    <TableRow key={index} item={item} onRefresh={onRefresh} onRowClick={handleRowClick} />
                 ))}
                 </tbody>
             </table>
@@ -71,6 +104,20 @@ export const Table = ({ data, onRefresh }) =>{
                     </li>
                 </ul>
             </nav>
+
+
+            {isModalOpen && (
+                <Modal
+                    show={isModalOpen}
+                    onHide={onCloseModal}
+                    title={modalTitle}
+                    width={modalWidth}
+                    height={modalHeight}
+                    content={modalContent}
+                />
+                )}
+
+
         </div>
     )
 }

@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+
+
+.custom-datepicker {
+  width: 650px; /* Adjust the width as needed */
+}

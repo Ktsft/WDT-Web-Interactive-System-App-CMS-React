@@ -47,7 +47,13 @@ export const Navbar = ({ username, onRefresh }) => {
 
     const onCloseModal = () => {
         // console.log("this is the on close modal pressed");
-        onRefresh();
+        onRefresh(true);
+        setIsModalOpen(false);
+    };
+
+
+    const onCloseModals = () => {
+        // console.log("this is the on close modal pressed");
         setIsModalOpen(false);
     };
 
@@ -93,7 +99,7 @@ export const Navbar = ({ username, onRefresh }) => {
                 // />
                 <Modal
                     show={isModalOpen}
-                    onHide={onCloseModal}
+                    onHide={onCloseModals}
                     title={modalTitle}
                     width={modalWidth}
                     height={modalHeight}
