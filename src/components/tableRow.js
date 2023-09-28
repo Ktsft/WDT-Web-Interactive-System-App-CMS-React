@@ -110,22 +110,24 @@ function TableRow({ item, onRefresh, onRowClick }) {
   // };
 
 
-  const downloadQRCode = (qrCodeBase64) => {
-    // Generate the QR code image from the qrCodeBase64
-    const qrCodeData = `data:image/png;base64,${qrCodeBase64}`;
-  
-    // Create an anchor element to trigger the download
-    const a = document.createElement('a');
-    a.href = qrCodeData;
-    a.download = `qr_code_${item.id}.png`; // Set the download filename (you might need to adjust this)
-    a.style.display = 'none';
-    document.body.appendChild(a);
+  const downloadQRCode = (qrCodeBase64) => {	
+    // Generate the QR code image from the qrCodeBase64	
+    // const qrCodeData = `data:image/png;base64,${qrCodeBase64}`;	
       
-    // Trigger a click event on the anchor element to start the download
-    a.click();
-  
-    // Remove the anchor element
-    document.body.removeChild(a);
+    // Create an anchor element	
+    const a = document.createElement('a');	
+    a.href = qrCodeBase64;	
+    a.download = `qr_code_${item.id}.png`; // Set the download filename	
+    a.style.display = 'none';	
+      
+    // Add the anchor element to the document	
+    document.body.appendChild(a);	
+      
+    // Trigger a click event on the anchor element to start the download	
+    a.click();	
+      
+    // Clean up by removing the anchor element	
+    document.body.removeChild(a);	
   };
 
   return (
