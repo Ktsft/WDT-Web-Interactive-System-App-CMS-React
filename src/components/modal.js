@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 
 export const Modal = ({ show, onHide, title, content, width, height }) => {
         
-    console.log("this is the height: ", height);
     const modalStyle = {
         // width: width,
         // height: height,

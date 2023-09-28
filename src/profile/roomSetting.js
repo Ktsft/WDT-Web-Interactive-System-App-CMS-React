@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../components/index';
-import { DatePicker } from 'rsuite';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css'; // Import the styles
 import Axios from 'axios';
 
 import '../styles/app.css';
@@ -21,6 +22,14 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
     const [greetingScrollBackgroundColor, setGreetingScrollBackgroundColor] = useState("");
     const [submitButtonImg, setSubmitButtonImg] = useState("");
 
+    const [roomName, setRoomName] = useState("");
+    const [roomDesc, setRoomDesc] = useState("");
+    const [restrictedWord, setRestrictedWord] = useState('');
+    const [defaultGreeting, setDefaultGreeting] = useState('');
+
+    const [startDate, setStartDate] = useState(new Date()); // Initialize with the current date and time
+  const [endDate, setEndDate] = useState(new Date()); // Initialize with the current date and time
+
     useEffect(() => {
         // console.log("this is the id from modal: ", id);
         if(id !== 'default-id'){
@@ -30,9 +39,24 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
               .then(response => {
                     onHandleRoomSetting();
                     // console.log("i get the value: ", response.data['game_mode']);
+                    setRoomName(response.data['room_name']);
+                    setRoomDesc(response.data['room_description']);
                     setGameMode(response.data['game_mode']);
                     setThemeIndex(response.data['theme_index']);
                     setLayoutDirection(response.data['layout_direction']);
+
+                    let restrictedWordString = JSON.stringify(response.data['restricted_word']);
+                    restrictedWordString = restrictedWordString.replace(/["\\\[\]]/g, "");
+                    restrictedWordString = restrictedWordString.replace(/,/g, "\n");
+                    restrictedWordString = restrictedWordString.replace(/u0027/g, "'");
+                    setRestrictedWord(restrictedWordString);
+            
+                    // Process default_greeting
+                    let defaultGreetingString = JSON.stringify(response.data['default_greeting']);
+                    defaultGreetingString = defaultGreetingString.replace(/["\\\[\]]/g, "");
+                    defaultGreetingString = defaultGreetingString.replace(/\|/g, '\n');
+                    defaultGreetingString = defaultGreetingString.replace(/u0027/g, "'");
+                    setDefaultGreeting(defaultGreetingString);
             })
             .catch(error => {
                 console.log("Get Room Id Exception From Modal");
@@ -91,6 +115,7 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                 case 'background_img':
                     console.log("i access background");
                     setBackgroundImg(reader.result);
+                    console.log("this is the result of backgrounf image:", backgroundImg);
                     break;
                 case 'app_logo_img':
                     console.log("i access app logo");
@@ -101,6 +126,10 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                     setCoverPhotoImg(reader.result);
                     break;
                 // Add cases for other image fields
+                case 'submit_button_img':
+                    console.log("i access submit button");
+                    setSubmitButtonImg(reader.result);
+                    break;
                 default:
                     break;
             }
@@ -154,41 +183,75 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
         setSubmitButtonImg('');
     };
 
+
+    const updateRoomSetting = () => {
+        // Axios.post("https://web-intractive-system-app-api.onrender.com/room/update/"+id, {
+        // },{
+
+        // })
+        // .then(response => {
+
+        // })
+        // .catch(error => {
+
+        // })
+        console.log("this is the start date: ", startDate);
+        console.log("this is the end date : ", endDate);
+    };
+
     return (
         <div className="container">
             <table className="user-table" >
                 <tbody>
                     <tr>
-                        <th className="user-table-label-cell" style={{ padding: '10px' }}>Start DateTime: </th>
-                        <td style={{ padding: '10px' }}><DatePicker format="yyyy-MM-dd HH:mm" className="custom-datepicker"   /></td>
+                        <th className="user-table-label-cell" style={{ padding: '10px' }}>Start Date: </th>
+                        <td style={{ padding: '10px' }}>
+                            <DatePicker
+                                     // Set the width to 100%
+                                     className="form-control custom-datepicker" // Apply the custom-datepicker class here
+                                     selected={startDate}
+                                    onChange={(date) => setStartDate(date)}
+                                    showTimeSelect
+                                    timeFormat="HH:mm"
+                                    timeIntervals={15}
+                                    timeCaption="Time"
+                                    dateFormat="MMMM d, yyyy h:mm aa"
+                                />
+                        </td>
                     </tr>
                     <tr>
-                        <th className="user-table-label-cell" style={{ padding: '10px' }}>End DateTime: </th>
-                        <td style={{ padding: '10px' }}><DatePicker format="yyyy-MM-dd HH:mm" className="custom-datepicker"  /></td>
+                        <th className="user-table-label-cell" style={{ padding: '10px' }}>End Date: </th>
+                        <td style={{ padding: '10px' }}>
+                            <DatePicker
+                                className="form-control"
+                                selected={endDate}
+                                onChange={(date) => setEndDate(date)}
+                                showTimeSelect
+                                timeFormat="HH:mm"
+                                timeIntervals={15}
+                                timeCaption="Time"
+                                dateFormat="MMMM d, yyyy h:mm aa"
+                            />
+                        </td>
                     </tr>
                     <tr>
                         <th className="user-table-label-cell" style={{ padding: '10px' }}>Room Name: </th>
-                        <td style={{ padding: '10px' }}> <input type="text" name="name"  className="form-control" /></td>
+                        <td style={{ padding: '10px' }}> <input type="text" name="name"  className="form-control" value={roomName} /></td>
                     </tr>
                     <tr>
                         <th className="user-table-label-cell" style={{ padding: '10px' }}>Room Description: </th>
-                        <td style={{ padding: '10px' }}> <input type="text" name="desc"  className="form-control" /></td>
+                        <td style={{ padding: '10px' }}> <input type="text" name="desc"  className="form-control"  value={roomDesc}/></td>
                     </tr>
                     <tr>
                         <th className="user-table-label-cell" style={{ padding: '10px' }}>Restricted Word: </th>
-                        <td style={{ padding: '10px' }}> <textarea className="form-control" id="restricWordArea" rows="4"  readOnly></textarea></td>
+                        <td style={{ padding: '10px' }}> <textarea className="form-control" id="restricWordArea" rows="4" value={restrictedWord} readOnly></textarea></td>
                     </tr>
                     <tr>
                         <th className="user-table-label-cell" style={{ padding: '10px' }}>Default Greeting: </th>
-                        <td style={{ padding: '10px' }}> <textarea className="form-control" id="defaultGreetArea" rows="4"  readOnly></textarea></td>
+                        <td style={{ padding: '10px' }}> <textarea className="form-control" id="defaultGreetArea" rows="4" value={defaultGreeting} readOnly></textarea></td>
                     </tr>
                     <tr>
-                        <th className="user-table-label-cell" style={{ padding: '10px' }}>Default Greeting: </th>
-                        <td style={{ padding: '10px' }}> <textarea className="form-control" id="defaultGreetArea" rows="4"  readOnly></textarea></td>
-                    </tr>
-                    <tr></tr>
-                    <tr>
-                        <th className="user-table-label-cell" colSpan="2"><h2>Big Screen Setting</h2></th>
+                        <th className="user-table-label-cell" colSpan="2" ><h2>Big Screen Setting</h2></th>
                     </tr>
                     <tr style={{ padding: '30px' }}>
                         <td>Mode :</td>
@@ -383,7 +446,7 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                     </tr>
                     <tr style={{ padding: '10px' }}>
                         <td>Name Icon Color: </td>
-                        <td>
+                        <td style={{ padding: '10px' }}>
                             <input
                                 className="mode-color"
                                 id="name_icon_color"
@@ -395,7 +458,7 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                     </tr>
                     <tr style={{ padding: '30px' }}>
                         <td style={{ width: '1050px' }}>Dropdown Highlight Color : </td>
-                        <td style={{ width: '150px' }}>
+                        <td style={{ width: '150px', padding: '10px' }}>
                             <input
                                 className="mode-color"
                                 id="dropdown_highlight_color"
@@ -406,8 +469,8 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                         </td>
                     </tr>
                     <tr style={{ padding: '20px' }}>
-                        <td style={{ width: '1350px' }}>Greeting Scroll Background Color : </td>
-                        <td style={{ width: '350px' }}>
+                        <td style={{ width: '3350px' , padding: '10px'}}>Greeting Scroll Background Color : </td>
+                        <td style={{ width: '350px' , padding: '10px' }}>
                             <input
                                 className="mode-color"
                                 id="greeting_scroll_color"
@@ -454,8 +517,8 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
             </table>
             <hr />
             <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
-                <Button type="button" classType="btn btn-danger"  text="Discard" buttonWidth="20%"  />
-                <Button type="button" classType="btn btn-primary"  text="Save" buttonWidth="20%"  />
+                <Button type="button" classType="btn btn-danger"  text="Discard" buttonWidth="20%" onClick={onClose} />
+                <Button type="button" classType="btn btn-primary"  text="Save" buttonWidth="20%"  onClick={updateRoomSetting} />
             </div>
         </div>
     )
