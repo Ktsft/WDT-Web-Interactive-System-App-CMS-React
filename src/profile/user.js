@@ -24,12 +24,12 @@ export const User = (props) => {
 
 
     const getUserById = () => {
-        console.log("this is the userId: ", userId);
+        // console.log("this is the userId: ", userId);
         Axios.get(`https://web-intractive-system-app-api.onrender.com/user/get/${userId}`, {
             headers: { Authorization: `Bearer ${token}` }
         })
         .then(response => {
-            console.log('User response from user.js:', response.data.username);
+            // console.log('User response from user.js:', response.data.username);
             setUsername(response.data.username);
             setEmail(response.data.email);
 

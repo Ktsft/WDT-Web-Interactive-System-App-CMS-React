@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Modal } from '../components/index';
 // import jwt_decode from 'jsonwebtoken';
 import '../styles/app.css';
+import DatePicker from 'react-datepicker';
 
 import Axios from 'axios'; // Import Axios
 // import { Modal } from 'bootstrap';
@@ -22,7 +23,9 @@ export const CreateRoom = (props) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const [showSuccessModal, setShowSuccessModal] = useState(false);
-
+    const [startDate, setStartDate] = useState(() => new Date()); // Initialize with the current date and time
+    const [endDate, setEndDate] = useState(() => new Date()); // Initialize with the current date and time
+    
 
     useEffect(() => {
         onHandleRestrictedWord();
@@ -78,6 +81,8 @@ export const CreateRoom = (props) => {
             gameMode : 0,
             themeIndex : 0,
             layoutDirection : 0,
+            startDate: startDate,
+            endDate: endDate,
           }, {
             headers: { Authorization: `Bearer ${token}` }
           })
@@ -120,13 +125,44 @@ export const CreateRoom = (props) => {
         <div className="container">
         <table className="user-table">
             <tbody>
+            <tr>
+                        <th className="user-table-label-cell" style={{ padding: '10px' }}>Start Date: </th>
+                        <td style={{ padding: '10px' }}>
+                            <DatePicker
+                                     // Set the width to 100%
+                                    className="form-control custom-datepicker-width-create-room" // Apply the custom-datepicker class here
+                                    selected={startDate}
+                                    onChange={(date) => setStartDate(date)}
+                                    showTimeSelect
+                                    timeFormat="HH:mm"
+                                    timeIntervals={15}
+                                    timeCaption="Time"
+                                    dateFormat="MMMM d, yyyy h:mm aa"
+                                />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th className="user-table-label-cell" style={{ padding: '10px' }}>End Date: </th>
+                        <td style={{ padding: '10px' }}>
+                            <DatePicker
+                                className="form-control custom-datepicker-width-create-room"
+                                selected={endDate}
+                                onChange={(date) => setEndDate(date)}
+                                showTimeSelect
+                                timeFormat="HH:mm"
+                                timeIntervals={15}
+                                timeCaption="Time"
+                                dateFormat="MMMM d, yyyy h:mm aa"
+                            />
+                        </td>
+                    </tr>
                 <tr>
                     <th className="user-table-label-cell" style={{ padding: '10px' }}>Room Name:</th>
-                    <td><input type="text" name="roomName" className="form-control" onChange={onHandleRoomNameChange} /></td>
+                    <td style={{ padding: '10px' }}><input type="text" name="roomName" className="form-control" onChange={onHandleRoomNameChange} /></td>
                 </tr>
                 <tr>
                     <th className="user-table-label-cell" style={{ padding: '10px' }}>Room Description:</th>
-                    <td><input type="text" name="roomDesc" className="form-control" onChange={onHandleRoomDescriptionChange} /></td>
+                    <td style={{ padding: '10px' }}><input type="text" name="roomDesc" className="form-control" onChange={onHandleRoomDescriptionChange} /></td>
                 </tr>
                 <tr>
                     <th className="user-table-label-cell" style={{ padding: '10px' }}>Restricted Word:</th>
@@ -140,7 +176,7 @@ export const CreateRoom = (props) => {
         </table>
         <hr />
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
-            <Button type="button" classType="btn btn-danger"  text="Discard" buttonWidth="20%" onClick={props.onCloseModal} />
+            <Button type="button" classType="btn btn-danger"  text="Discard" buttonWidth="20%" onClick={props.onCloseModals} />
             <Button type="button" classType="btn btn-primary"  text="Save" buttonWidth="20%" onClick={onHandleCreateRoom} />
         </div>
     

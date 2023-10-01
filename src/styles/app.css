@@ -90,3 +90,13 @@ body{
 .mode-color {
     margin-left: 100px; /* Adjust the margin as needed */
 }
+
+
+.custom-datepicker-width {
+    width: 350% !important;
+}
+
+
+.custom-datepicker-width-create-room {
+    width: 240% !important;
+}

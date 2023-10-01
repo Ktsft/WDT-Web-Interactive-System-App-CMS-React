@@ -3,10 +3,10 @@ import { Button } from '../components/index';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'; // Import the styles
 import Axios from 'axios';
-
+import moment from 'moment';
 import '../styles/app.css';
 
-export const RoomSetting = ({ id = 'default-id', onClose }) => {
+export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals }) => {
 
     const token = localStorage.getItem('token');
     const [gameMode, setGameMode] = useState("");
@@ -27,16 +27,22 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
     const [restrictedWord, setRestrictedWord] = useState('');
     const [defaultGreeting, setDefaultGreeting] = useState('');
 
-    const [startDate, setStartDate] = useState(new Date()); // Initialize with the current date and time
-  const [endDate, setEndDate] = useState(new Date()); // Initialize with the current date and time
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+
+    const [startDate, setStartDate] = useState(() => new Date()); // Initialize with the current date and time
+    const [endDate, setEndDate] = useState(() => new Date()); // Initialize with the current date and time
+    
 
     useEffect(() => {
         // console.log("this is the id from modal: ", id);
         if(id !== 'default-id'){
+           
             Axios.get("https://web-intractive-system-app-api.onrender.com/room/get/"+id, {
                 headers: { Authorization: `Bearer ${token}` }
               })
               .then(response => {
+
                     onHandleRoomSetting();
                     // console.log("i get the value: ", response.data['game_mode']);
                     setRoomName(response.data['room_name']);
@@ -44,6 +50,24 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                     setGameMode(response.data['game_mode']);
                     setThemeIndex(response.data['theme_index']);
                     setLayoutDirection(response.data['layout_direction']);
+
+                    //  const startDateValue = moment(response.data["start_date"]).toDate();
+                    // // console.log("start date value: ", startDateValue);
+                    // setStartDate(startDateValue);
+                    // const endDateValue = new Date(response.data["end_dates"]);
+                    // // console.log("this is the end date: ", endDateValue);
+                    // setEndDate(endDateValue);
+                    if (response.data["start_date"] && response.data["end_dates"]) {
+                        const startDateValue = moment(response.data["start_date"]).toDate();
+                        setStartDate(startDateValue);
+    
+                        const endDateValue = new Date(response.data["end_dates"]);
+                        setEndDate(endDateValue);
+                    } else {
+                        // Set default values for start_date and end_dates
+                        setStartDate(new Date());
+                        setEndDate(new Date());
+                    }
 
                     let restrictedWordString = JSON.stringify(response.data['restricted_word']);
                     restrictedWordString = restrictedWordString.replace(/["\\\[\]]/g, "");
@@ -57,9 +81,10 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                     defaultGreetingString = defaultGreetingString.replace(/\|/g, '\n');
                     defaultGreetingString = defaultGreetingString.replace(/u0027/g, "'");
                     setDefaultGreeting(defaultGreetingString);
+
             })
             .catch(error => {
-                console.log("Get Room Id Exception From Modal");
+                console.log("Get Room Id Exception From Modal: ", error);
             });  
         }
     }, [id]);
@@ -71,6 +96,12 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
         })
         .then(response => {
             // console.log("this is the background image: ", response.data['background_img']);
+            // const startDateValue = moment(response.data["start_date"]).toDate();
+            // // console.log("start date value: ", startDateValue);
+            // setStartDate(startDateValue);
+            // const endDateValue = new Date(response.data["end_date"]);
+            // // console.log("this is the end date: ", endDateValue);
+            // setEndDate(endDateValue);
             setBackgroundImg(response.data['background_img']);
             setAppLogoImg(response.data["app_logo_img"]);
             setCoverPhotoImg(response.data["cover_photo_img"]);
@@ -113,21 +144,21 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
         reader.onloadend = () => {
             switch(field){
                 case 'background_img':
-                    console.log("i access background");
+                    // console.log("i access background");
                     setBackgroundImg(reader.result);
                     console.log("this is the result of backgrounf image:", backgroundImg);
                     break;
                 case 'app_logo_img':
-                    console.log("i access app logo");
+                    // console.log("i access app logo");
                     setAppLogoImg(reader.result);
                     break;
                 case 'cover_photo_img':
-                    console.log("i access cover photo");
+                    // console.log("i access cover photo");
                     setCoverPhotoImg(reader.result);
                     break;
                 // Add cases for other image fields
                 case 'submit_button_img':
-                    console.log("i access submit button");
+                    // console.log("i access submit button");
                     setSubmitButtonImg(reader.result);
                     break;
                 default:
@@ -185,19 +216,57 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
 
 
     const updateRoomSetting = () => {
-        // Axios.post("https://web-intractive-system-app-api.onrender.com/room/update/"+id, {
-        // },{
+        Axios.post("https://web-intractive-system-app-api.onrender.com/room/update/"+id, {
+            roomName : roomName,
+            roomDescription : roomDesc,
+            gameMode: gameMode,
+            themeIndex: themeIndex,
+            layoutDirection: layoutDirection,
+            startDate: startDate,
+            endDate: endDate
+        },{
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        .then(response => {
 
-        // })
-        // .then(response => {
+            console.log("update room successfully");
+            Axios.post("https://web-intractive-system-app-api.onrender.com/roomSetting/update/"+id, {
+                backgroundImg :backgroundImg,
+                appLogoImg : appLogoImg,
+                coverPhotoImg: coverPhotoImg,
+                welcomeTextColor: welcomeTextColor,
+                nameIconColor : nameIconColor,
+                dropdownHighlightColor: dropdownHighlightColor,
+                greetingScrollBackgroundColor: greetingScrollBackgroundColor,
+                submitButton : submitButtonImg
+            },{
+                headers: { Authorization: `Bearer ${token}` }
+            }).then(response2 => {
+                setShowSuccessModal(true);
+                onCloseModals(); 
+            })
+            .catch(error2 => {
+                console.log("Error exception on update room setting: ", error2);
+            })
+        })
+        .catch(error => {
+            console.log("Error exception on update room: ", error);
+        })
 
-        // })
-        // .catch(error => {
 
-        // })
-        console.log("this is the start date: ", startDate);
-        console.log("this is the end date : ", endDate);
     };
+
+
+
+
+    const onHandleRoomNameChange = (e) => {
+        setRoomName(e.target.value);
+    };
+
+    const onHandleRoomDescriptionChange = (e) => {
+        setRoomDesc(e.target.value);
+    };
+
 
     return (
         <div className="container">
@@ -208,7 +277,7 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                         <td style={{ padding: '10px' }}>
                             <DatePicker
                                      // Set the width to 100%
-                                     className="form-control custom-datepicker" // Apply the custom-datepicker class here
+                                     className="form-control custom-datepicker-width" // Apply the custom-datepicker class here
                                      selected={startDate}
                                     onChange={(date) => setStartDate(date)}
                                     showTimeSelect
@@ -223,7 +292,7 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                         <th className="user-table-label-cell" style={{ padding: '10px' }}>End Date: </th>
                         <td style={{ padding: '10px' }}>
                             <DatePicker
-                                className="form-control"
+                                className="form-control custom-datepicker-width"
                                 selected={endDate}
                                 onChange={(date) => setEndDate(date)}
                                 showTimeSelect
@@ -236,11 +305,11 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                     </tr>
                     <tr>
                         <th className="user-table-label-cell" style={{ padding: '10px' }}>Room Name: </th>
-                        <td style={{ padding: '10px' }}> <input type="text" name="name"  className="form-control" value={roomName} /></td>
+                        <td style={{ padding: '10px' }}> <input type="text" name="name"  className="form-control" value={roomName} onChange={onHandleRoomNameChange} /></td>
                     </tr>
                     <tr>
                         <th className="user-table-label-cell" style={{ padding: '10px' }}>Room Description: </th>
-                        <td style={{ padding: '10px' }}> <input type="text" name="desc"  className="form-control"  value={roomDesc}/></td>
+                        <td style={{ padding: '10px' }}> <input type="text" name="desc"  className="form-control"  value={roomDesc} onChange={onHandleRoomDescriptionChange}/></td>
                     </tr>
                     <tr>
                         <th className="user-table-label-cell" style={{ padding: '10px' }}>Restricted Word: </th>
@@ -259,18 +328,18 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                             <input type="hidden" id="gameModeSelect" value={gameMode} />
                             <div className="btn-group btn-group-toggle" data-toggle="buttons">
                                 <label className={`btn btn-outline-primary btn-lg square-button ${gameMode === '1' ? 'active' : ''}`} style={{ marginLeft: '10px' , width: '133px' }}>
-                                    <input
-                                        type="radio"
-                                        onChange={() => handleGameModeChange('1')}
-                                        checked={gameMode === '1'}
-                                    />
+                                <input
+                                    type="radio"
+                                    onChange={() => handleGameModeChange('1')}
+                                    checked={gameMode == '1'} // Compare to a string value
+                                />
                                     <span className="mode-label">Mode 1</span>
                                 </label>
                                 <label className={`btn btn-outline-primary btn-lg square-button ${gameMode === '2' ? 'active' : ''}`} style={{ marginLeft: '10px' , width: '133px' }}>
                                     <input
                                         type="radio"
                                         onChange={() => handleGameModeChange('2')}
-                                        checked={gameMode === '2'}
+                                        checked={gameMode == '2'}
                                     />
                                     <span className="mode-label">Mode 2</span>
                                 </label>
@@ -278,7 +347,7 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                                     <input
                                         type="radio"
                                         onChange={() => handleGameModeChange('3')}
-                                        checked={gameMode === '3'}
+                                        checked={gameMode == '3'}
                                     />
                                     <span className="mode-label">Mode 3</span>
                                 </label>
@@ -296,7 +365,7 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                                     <input
                                         type="radio"
                                         onChange={() => handleThemeIndexChange('1')}
-                                        checked={themeIndex === '1'}
+                                        checked={themeIndex == '1'}
                                     />
                                     <span className="mode-label">Theme 1</span>
                                 </label>
@@ -304,7 +373,7 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                                     <input
                                         type="radio"
                                         onChange={() => handleThemeIndexChange('2')}
-                                        checked={themeIndex === '2'}
+                                        checked={themeIndex == '2'}
                                     />
                                     <span className="mode-label">Theme 2</span>
                                 </label>
@@ -312,7 +381,7 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                                     <input
                                         type="radio"
                                         onChange={() => handleThemeIndexChange('3')}
-                                        checked={themeIndex === '3'}
+                                        checked={themeIndex == '3'}
                                     />
                                     <span className="mode-label">Theme 3</span>
                                 </label>
@@ -327,7 +396,7 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                             <label className={`btn btn-outline-primary btn-lg square-button ${layoutDirection === '1' ? 'active' : ''}`} style={{ marginRight: '10px' }}>
                                 <input
                                     type="radio"
-                                    checked={layoutDirection === '1'}
+                                    checked={layoutDirection == '1'}
                                     onChange={() => handleLayoutChange('1')}
                                 />
                                 <span className="mode-label">Layout 1</span>
@@ -335,7 +404,7 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                                 <label className={`btn btn-outline-primary btn-lg square-button ${layoutDirection === '2' ? 'active' : ''}`} style={{ marginRight: '10px'  }}>
                                 <input
                                     type="radio"
-                                    checked={layoutDirection === '2'}
+                                    checked={layoutDirection == '2'}
                                     onChange={() => handleLayoutChange('2')}
                                 />
                                 <span className="mode-label">Layout 2</span>
@@ -343,7 +412,7 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                                 <label className={`btn btn-outline-primary btn-lg square-button ${layoutDirection === '3' ? 'active' : ''}`}  style={{ marginRight: '10px', width: '150px'}}>
                                 <input
                                     type="radio"
-                                    checked={layoutDirection === '3'}
+                                    checked={layoutDirection == '3'}
                                     onChange={() => handleLayoutChange('3')}
                                 />
                                 <span className="mode-label">Layout 3</span>
@@ -503,6 +572,7 @@ export const RoomSetting = ({ id = 'default-id', onClose }) => {
                                 type="file"
                                 accept="image/png, image/jpeg"
                                 // onChange={(e) => displayUploadedImage(e)}
+                                onChange={(e) => handleImageUpload(e, 'submit_button_img')}
                                 style={{ width: '50%', display: 'inline-block' }}
                             />
                             <input

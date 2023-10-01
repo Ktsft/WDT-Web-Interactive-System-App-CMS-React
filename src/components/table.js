@@ -45,10 +45,17 @@ export const Table = ({ data, onRefresh }) =>{
     };
 
 
+    const onCloseModals = () => {
+        // console.log("this is the on close modal pressed");
+        onRefresh(true);
+        setIsModalOpen(false);
+    };
+
+
     const handleRowClick = (id) => {
-        console.log("i have access the handle row click: ", id);
+        // console.log("i have access the handle row click: ", id);
         setSelectedId(id); // Set the selected ID
-        toggleModal(<RoomSetting id={id} onClose={onCloseModal} />, '1000px', '1500px', 'Room Setting');
+        toggleModal(<RoomSetting id={id} onClose={onCloseModal} onCloseModals={onCloseModals}/>, '1000px', '1500px', 'Room Setting');
       };
 
 

@@ -75,7 +75,7 @@ export const Navbar = ({ username, onRefresh }) => {
                         <li className="nav-item active">
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <CreateIcon style={{ marginRight: '1px' }} />
-                                <a className="nav-link" href="#" onClick={() =>toggleModal(<CreateRoom onCloseModal={onCloseModal} />,'700px','1500px', 'Create Room')} >Create Room <span className="sr-only"></span></a>
+                                <a className="nav-link" href="#" onClick={() =>toggleModal(<CreateRoom onCloseModal={onCloseModal} onCloseModals={onCloseModals} />,'700px','1500px', 'Create Room')} >Create Room <span className="sr-only"></span></a>
                             </div>   
                         </li>
                         <li className="nav-item">

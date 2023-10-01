@@ -96,7 +96,7 @@ function TableRow({ item, onRefresh, onRowClick }) {
   
   const onCloseModal = () => {
     // console.log("this is the on close modal pressed");
-    // onRefresh(true);
+    onRefresh(true);
     setIsModalOpen(false);
 };
 

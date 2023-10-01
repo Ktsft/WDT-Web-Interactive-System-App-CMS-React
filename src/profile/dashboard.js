@@ -37,7 +37,7 @@
 
         if (token) {
             // Token exists in localStorage
-            console.log('Token:', token);
+            // console.log('Token:', token);
         } else {
             // Token doesn't exist in localStorage
             console.log('Token not found');
@@ -52,7 +52,7 @@
                 headers: { Authorization: `Bearer ${token}` }
             })
             .then(response => {
-                console.log('this is the room resposne: ', response.data);
+                // console.log('this is the room resposne: ', response.data);
                 setRoom(response.data);
                 if(isRefresh === true){
                     setToastMessage('Create Room Successfully'); // Set toast message on error
@@ -72,12 +72,12 @@
 
 
         const getUserById = (userId) => {
-            console.log("this is the userId: ", userId);
+            // console.log("this is the userId: ", userId);
             Axios.get(`https://web-intractive-system-app-api.onrender.com/user/get/${userId}`, {
               headers: { Authorization: `Bearer ${token}` }
             })
             .then(response => {
-                console.log('User response:', response.data.username);
+                // console.log('User response:', response.data.username);
                 setUsername(response.data.username);
                 // console.log("this is the username: ", username);
             })
