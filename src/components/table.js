@@ -4,7 +4,7 @@ import TableRow from './tableRow';
 import { RoomSetting } from '../profile';
 
 
-export const Table = ({ data, onRefresh }) =>{
+export const Table = ({ data, onRefresh, showToast }) =>{
 
 
     const itemsPerPage = 10; // Number of items to display per page
@@ -74,7 +74,7 @@ export const Table = ({ data, onRefresh }) =>{
                 </thead>
                 <tbody>
                 {itemsToDisplay.map((item, index) => (
-                    <TableRow key={index} item={item} onRefresh={onRefresh} onRowClick={handleRowClick} />
+                    <TableRow key={index} item={item} onRefresh={onRefresh} onRowClick={handleRowClick}  showToast={showToast} />
                 ))}
                 </tbody>
             </table>

@@ -16,6 +16,7 @@
         const [toastShow, setToastShow] = useState(false);
         const [toastMessage, setToastMessage] = useState('');
         const [toastHeader, setToastHeader] = useState('');
+        const [toastType, setToastType] = useState('');
 
         const { user, login, logout } = useUser(); // Access user context
         // console.log("this is the user from dashbaord: ", user)
@@ -59,7 +60,7 @@
                     setToastHeader('Successful');
                     setToastMessage('Create Room Successfully'); // Set toast message on error
                     setToastShow(true); // Show the toast on error
-                    
+                    setToastType('success');
                     // Automatically hide the toast after a certain duration (e.g., 5000 milliseconds or 5 seconds)
                     setTimeout(() => {
                       setToastShow(false);
@@ -93,6 +94,17 @@
         };
 
 
+        const showToast = (message, type, header) => {
+            setToastMessage(message);
+            setToastType(type);
+            setToastHeader(header);
+            setToastShow(true);
+            setTimeout(() => {
+                setToastShow(false);
+            }, 2000); // Adjust the duration as needed
+        };
+
+
         return(
             <div>
                 <Loading show={loading}/>
@@ -100,11 +112,11 @@
                     <div className="container dashboard-container">
                         <Navbar onShowModal={toggleModal}  username={ username? username:''} onRefresh={() => getAllRoom(true)} />
                         <div className="table-container">
-                            <Table data={room} onRefresh={() => getAllRoom(false)}  />
+                            <Table data={room} onRefresh={() => getAllRoom(false)} showToast={showToast}  />
                         </div>
                     </div>
                 </div>
-                <Toast show={toastShow} message={toastMessage} type="success" title={toastHeader} />
+                <Toast show={toastShow} message={toastMessage} type={toastType} title={toastHeader} />
             </div>
         )
         

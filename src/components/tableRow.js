@@ -17,7 +17,7 @@ function secondsToHHMMSS(seconds) {
 
 
 
-function TableRow({ item, onRefresh, onRowClick }) {
+function TableRow({ item, onRefresh, onRowClick, showToast }) {
 
   const remainingDuration = secondsToHHMMSS(item.end_date - Math.floor(Date.now() / 1000));
   
@@ -79,6 +79,7 @@ function TableRow({ item, onRefresh, onRowClick }) {
       .then(response => {
         // window.location.href = 'admin.html';
         console.log("deleted successfully");
+        showToast('Room deleted successfully', 'success', 'Successful');
         onRefresh();
       })
       .catch(error => {
