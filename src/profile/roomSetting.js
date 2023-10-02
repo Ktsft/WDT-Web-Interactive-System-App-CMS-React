@@ -6,7 +6,7 @@ import Axios from 'axios';
 import moment from 'moment';
 import '../styles/app.css';
 
-export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals }) => {
+export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToast }) => {
 
     const token = localStorage.getItem('token');
     const [gameMode, setGameMode] = useState("");
@@ -245,7 +245,8 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals }) => {
                 headers: { Authorization: `Bearer ${token}` }
             }).then(response2 => {
                 console.log("update room setting successful");
-                setShowSuccessModal(true);
+                // setShowSuccessModal(true);
+                showToast('Update room successfully', 'success', 'Successful');
                 onCloseModals(); 
             })
             .catch(error2 => {

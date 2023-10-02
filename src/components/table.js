@@ -55,7 +55,7 @@ export const Table = ({ data, onRefresh, showToast }) =>{
     const handleRowClick = (id) => {
         // console.log("i have access the handle row click: ", id);
         setSelectedId(id); // Set the selected ID
-        toggleModal(<RoomSetting id={id} onClose={onCloseModal} onCloseModals={onCloseModals}/>, '1000px', '1500px', 'Room Setting');
+        toggleModal(<RoomSetting id={id} onClose={onCloseModal} onCloseModals={onCloseModals} showToast={showToast}/>, '1000px', '1500px', 'Room Setting');
       };
 
 

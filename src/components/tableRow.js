@@ -1,7 +1,6 @@
 import React , { useState, useEffect } from 'react';
 import { GearIcon, BookIcon, TrashIcon, QrCodeIcon } from '../assets/icon';
 import { Modal, Loading } from '../components/index';
-import { RoomSetting } from "../profile/index";
 
 import Axios from 'axios';
 
