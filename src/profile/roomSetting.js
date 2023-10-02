@@ -21,6 +21,7 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals }) => {
     const [dropdownHighlightColor, setDropdownHighlightColor] = useState("");
     const [greetingScrollBackgroundColor, setGreetingScrollBackgroundColor] = useState("");
     const [submitButtonImg, setSubmitButtonImg] = useState("");
+    const [defaultImg, setDefaultImg] = useState("");
 
     const [roomName, setRoomName] = useState("");
     const [roomDesc, setRoomDesc] = useState("");
@@ -30,8 +31,8 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals }) => {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
 
-    const [startDate, setStartDate] = useState(() => new Date()); // Initialize with the current date and time
-    const [endDate, setEndDate] = useState(() => new Date()); // Initialize with the current date and time
+    const [startDate, setStartDate] = useState(null);  // Initialize with the current date and time
+    const [endDate, setEndDate] = useState(null);  // Initialize with the current date and time
     
 
     useEffect(() => {
@@ -44,6 +45,7 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals }) => {
               .then(response => {
 
                     onHandleRoomSetting();
+                    onHandleDefaultImage();
                     // console.log("i get the value: ", response.data['game_mode']);
                     setRoomName(response.data['room_name']);
                     setRoomDesc(response.data['room_description']);
@@ -242,6 +244,7 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals }) => {
             },{
                 headers: { Authorization: `Bearer ${token}` }
             }).then(response2 => {
+                console.log("update room setting successful");
                 setShowSuccessModal(true);
                 onCloseModals(); 
             })
@@ -266,6 +269,20 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals }) => {
     const onHandleRoomDescriptionChange = (e) => {
         setRoomDesc(e.target.value);
     };
+
+
+    const onHandleDefaultImage = () =>[
+        Axios.get("https://web-intractive-system-app-api.onrender.com/defaultImage/get", {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        .then(response => {
+            setDefaultImg(response.data["image"]);
+            // console.log("this is the default image value: ", response.data["image"]);
+        })
+        .catch(error => {
+            console.log("Get Room Setting Exception From Room Setting: ", error);
+        })
+    ];
 
 
     return (
@@ -435,7 +452,7 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals }) => {
                                     id="background_img_holder"
                                     width="120"
                                     height="120"
-                                    src={backgroundImg}
+                                    src={backgroundImg || defaultImg} 
                                     alt="Background"
                                 />
                                 <input
@@ -461,8 +478,8 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals }) => {
                                     id="app_img_holder"
                                     width="120"
                                     height="120"
-                                    src={appLogoImg}
-                                    alt="Background"
+                                    src={appLogoImg|| defaultImg}
+                                    alt="Applogo"
                                 />
                                 <input
                                     className="form-control form-control-sm mode-image"
@@ -487,8 +504,8 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals }) => {
                                     id="cover_img_holder"
                                     width="120"
                                     height="120"
-                                    src={coverPhotoImg}
-                                    alt="Background"
+                                    src={coverPhotoImg|| defaultImg}
+                                    alt="Mode"
                                 />
                                 <input
                                     className="form-control form-control-sm mode-image"
@@ -563,8 +580,8 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals }) => {
                                 className="mode-image"
                                 id="submit_button_img_holder"
                                 height={120}
-                                src={submitButtonImg}
-                                alt="Submit Button"
+                                src={submitButtonImg || defaultImg}
+                                alt="Submit"
                             />
                             <input
                                 className="form-control form-control-sm mode-image"

@@ -2,7 +2,7 @@ import React from 'react';
 import { Notification, Placeholder } from 'rsuite';
 
 
-export const Toast = ({ show, message, type }) => {
+export const Toast = ({ show, message, type, title }) => {
 
     const customStyles = {
         position: 'fixed',
@@ -24,7 +24,7 @@ export const Toast = ({ show, message, type }) => {
     <div>
         {
             show &&
-            <Notification closable type={type} header="Informational" style={customStyles}>
+            <Notification closable type={type} header={title} style={customStyles}>
                 <div style={messageStyles}>
                     {message} {/* Set the message here */}
                 </div>

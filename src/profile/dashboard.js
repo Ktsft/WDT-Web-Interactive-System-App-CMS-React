@@ -15,6 +15,7 @@
         const [username, setUsername] = useState('');
         const [toastShow, setToastShow] = useState(false);
         const [toastMessage, setToastMessage] = useState('');
+        const [toastHeader, setToastHeader] = useState('');
 
         const { user, login, logout } = useUser(); // Access user context
         // console.log("this is the user from dashbaord: ", user)
@@ -55,6 +56,7 @@
                 // console.log('this is the room resposne: ', response.data);
                 setRoom(response.data);
                 if(isRefresh === true){
+                    setToastHeader('Successful');
                     setToastMessage('Create Room Successfully'); // Set toast message on error
                     setToastShow(true); // Show the toast on error
                     
@@ -102,7 +104,7 @@
                         </div>
                     </div>
                 </div>
-                <Toast show={toastShow} message={toastMessage} type="success" />
+                <Toast show={toastShow} message={toastMessage} type="success" title={toastHeader} />
             </div>
         )
         
