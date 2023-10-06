@@ -330,8 +330,8 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
                                     timeIntervals={15}
                                     timeCaption="Time"
                                     dateFormat="MMMM d, yyyy h:mm aa"
-                                    minDate={isActiveChecked ? new Date() : null} // Set minDate conditionally
-                                />
+                                    minDate={new Date()} // Disable past dates
+                                    />
                         </td>
                     </tr>
                     <tr>
@@ -346,8 +346,8 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
                                 timeIntervals={15}
                                 timeCaption="Time"
                                 dateFormat="MMMM d, yyyy h:mm aa"
-                                minDate={isActiveChecked ? new Date() : null} // Set minDate conditionally
-                            />
+                                minDate={new Date()} // Disable past dates
+                                />
                         </td>
                     </tr>
                     <tr>
