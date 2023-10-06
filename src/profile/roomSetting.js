@@ -59,23 +59,36 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
                     // const endDateValue = new Date(response.data["end_dates"]);
                     // // console.log("this is the end date: ", endDateValue);
                     // setEndDate(endDateValue);
-                    if (response.data["start_date"] && response.data["end_dates"]) {
+                    // if (response.data["start_date"] && response.data["end_dates"]) {
+                    //     const startDateValue = moment(response.data["start_date"]).toDate();
+                    //     setStartDate(startDateValue);
+    
+                    //     const endDateValue = new Date(response.data["end_dates"]);
+                    //     setEndDate(endDateValue);
+                    // } else {
+                    //     // Set default values for start_date and end_dates
+                    //     setStartDate(new Date());
+                    //     setEndDate(new Date());
+                    // }
+
+                    if (response.data["start_date"] === "1970-01-01T00:00:00.000Z" && response.data["end_dates"] === "1970-01-01T00:00:00.000Z") {
+                        setStartDate(null);
+                        setEndDate(null);
+                    } else {
                         const startDateValue = moment(response.data["start_date"]).toDate();
                         setStartDate(startDateValue);
-    
+                    
                         const endDateValue = new Date(response.data["end_dates"]);
                         setEndDate(endDateValue);
-                    } else {
-                        // Set default values for start_date and end_dates
-                        setStartDate(new Date());
-                        setEndDate(new Date());
                     }
 
-                    let restrictedWordString = JSON.stringify(response.data['restricted_word']);
-                    restrictedWordString = restrictedWordString.replace(/["\\\[\]]/g, "");
-                    restrictedWordString = restrictedWordString.replace(/,/g, "\n");
-                    restrictedWordString = restrictedWordString.replace(/u0027/g, "'");
-                    setRestrictedWord(restrictedWordString);
+                    // let restrictedWordString = JSON.stringify(response.data['restricted_word']);
+                    // restrictedWordString = restrictedWordString.replace(/["\\\[\]]/g, "");
+                    // restrictedWordString = restrictedWordString.replace(/,/g, "\n");
+                    // restrictedWordString = restrictedWordString.replace(/u0027/g, "'");
+                    // setRestrictedWord(restrictedWordString);
+                    setRestrictedWord(response.data['restricted_word'].split('|').join('\n'));
+
             
                     // Process default_greeting
                     let defaultGreetingString = JSON.stringify(response.data['default_greeting']);
@@ -218,12 +231,26 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
 
 
     const updateRoomSetting = () => {
+
+        const restrictedWordArray = restrictedWord.split('\n');
+        const defaultGreetingArray = defaultGreeting.split('\n');
+
+        // Replace single quotes with 'u0027' in each element of the array
+        const restrictedWordModified = restrictedWordArray.map((word) => word.replace(/'/g, 'u0027'));
+        const defaultGreetingModified = defaultGreetingArray.map((greeting) => greeting.replace(/'/g, 'u0027'));
+
+        // Combine the modified array elements back into a single string with '|'
+        const restrictedWordFinal = restrictedWordModified.join('|');
+        const defaultGreetingFinal = defaultGreetingModified.join('|');
+
         Axios.post("https://web-intractive-system-app-api.onrender.com/room/update/"+id, {
             roomName : roomName,
             roomDescription : roomDesc,
             gameMode: gameMode,
             themeIndex: themeIndex,
             layoutDirection: layoutDirection,
+            restrictedWord : restrictedWordFinal,
+            defaultGreeting : defaultGreetingFinal,
             startDate: startDate,
             endDate: endDate
         },{
@@ -303,6 +330,7 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
                                     timeIntervals={15}
                                     timeCaption="Time"
                                     dateFormat="MMMM d, yyyy h:mm aa"
+                                    minDate={isActiveChecked ? new Date() : null} // Set minDate conditionally
                                 />
                         </td>
                     </tr>
@@ -318,6 +346,7 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
                                 timeIntervals={15}
                                 timeCaption="Time"
                                 dateFormat="MMMM d, yyyy h:mm aa"
+                                minDate={isActiveChecked ? new Date() : null} // Set minDate conditionally
                             />
                         </td>
                     </tr>
@@ -331,11 +360,11 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
                     </tr>
                     <tr>
                         <th className="user-table-label-cell" style={{ padding: '10px' }}>Restricted Word: </th>
-                        <td style={{ padding: '10px' }}> <textarea className="form-control" id="restricWordArea" rows="4" value={restrictedWord} readOnly></textarea></td>
+                        <td style={{ padding: '10px' }}> <textarea className="form-control" id="restricWordArea" rows="4" value={restrictedWord} onChange={(e) => setRestrictedWord(e.target.value) }></textarea></td>
                     </tr>
                     <tr>
                         <th className="user-table-label-cell" style={{ padding: '10px' }}>Default Greeting: </th>
-                        <td style={{ padding: '10px' }}> <textarea className="form-control" id="defaultGreetArea" rows="4" value={defaultGreeting} readOnly></textarea></td>
+                        <td style={{ padding: '10px' }}> <textarea className="form-control" id="defaultGreetArea" rows="4" value={defaultGreeting} onChange={(e) => setDefaultGreeting(e.target.value) }></textarea></td>
                     </tr>
                     <tr>
                         <th className="user-table-label-cell" colSpan="2" ><h2>Big Screen Setting</h2></th>

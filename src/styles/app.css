@@ -100,3 +100,10 @@ body{
 .custom-datepicker-width-create-room {
     width: 240% !important;
 }
+
+
+.custom-switch-input {
+    width: 60px; /* Adjust the width to make it larger */
+    height: 25px; /* Adjust the height to make it taller */
+    transform: scale(1.5); /* Scale up the switch */
+  }

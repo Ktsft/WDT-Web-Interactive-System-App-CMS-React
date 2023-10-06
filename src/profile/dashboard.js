@@ -56,6 +56,7 @@
             .then(response => {
                 // console.log('this is the room resposne: ', response.data);
                 setRoom(response.data);
+                console.log("this is the response data from dashboard: ", response.data['end_dates']);
                 if(isRefresh === true){
                     setToastHeader('Successful');
                     setToastMessage('Create Room Successfully'); // Set toast message on error

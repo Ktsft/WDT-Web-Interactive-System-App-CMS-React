@@ -1,6 +1,7 @@
 import React , { useState, useEffect } from 'react';
 import { GearIcon, BookIcon, TrashIcon, QrCodeIcon } from '../assets/icon';
 import { Modal, Loading } from '../components/index';
+import { RoomSetting } from "../profile/index";
 
 import Axios from 'axios';
 
@@ -34,26 +35,27 @@ function TableRow({ item, onRefresh, onRowClick, showToast }) {
 
   const token = localStorage.getItem('token');
 
-  useEffect(() => {
-    if (item.end_date <= Math.floor(Date.now() / 1000)) {
-      // If the end_date has passed, update room status using your API
-      Axios
-        .post(`https://web-intractive-system-app-api.onrender.com/room/toggle/${item.id}`, {}, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-        .then(response => {
+  // useEffect(() => {
+  //   if (item.end_date <= Math.floor(Date.now() / 1000)) {
+  //     // If the end_date has passed, update room status using your API
+  //     Axios
+  //       .post(`https://web-intractive-system-app-api.onrender.com/room/toggle/${item.id}`, {}, {
+  //         headers: { Authorization: `Bearer ${token}` }
+  //       })
+  //       .then(response => {
           
-          setRoomStatus(response.data.room_status);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    }
-  }, [item.end_date, item.id]);
+  //         setRoomStatus(response.data.room_status);
+  //       })
+  //       .catch(error => {
+  //         console.log(error);
+  //       });
+  //   }
+  // }, [item.end_date, item.id]);
 
 
 
   const toggleRoomStatus = (roomId) => {
+    
     // Send a request to toggle the room status
       Axios.post(`/room/toggle/${roomId}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
@@ -134,7 +136,7 @@ function TableRow({ item, onRefresh, onRowClick, showToast }) {
     <tr>
       <th scope="row">{item.id}</th>
       <td>{item.room_name}</td>
-      <td>{remainingDuration}</td>
+      <td>{item.remaining_time || '0:0:0.000000'}</td>
       <td>
       {roomStatus === 0 ? (
           <div className="form-check form-switch">

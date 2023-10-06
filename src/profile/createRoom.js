@@ -23,9 +23,11 @@ export const CreateRoom = (props) => {
     const [isLoading, setIsLoading] = useState(false);
 
     const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const [startDate, setStartDate] = useState(() => new Date()); // Initialize with the current date and time
-    const [endDate, setEndDate] = useState(() => new Date()); // Initialize with the current date and time
-    
+    // const [startDate, setStartDate] = useState(() => new Date()); // Initialize with the current date and time
+    const [startDate, setStartDate] = useState(null); // Initialize with the current date and time
+    // const [endDate, setEndDate] = useState(() => new Date()); // Initialize with the current date and time
+    const [endDate, setEndDate] = useState(null); // Initialize with the current date and time
+    const [isActiveChecked, setIsActiveChecked] = useState(false);
 
     useEffect(() => {
         onHandleRestrictedWord();
@@ -69,6 +71,17 @@ export const CreateRoom = (props) => {
 
     const onHandleCreateRoom = () => { 
 
+        const restrictedWordArray = restrictedWord.split('\n');
+        const defaultGreetingArray = defaultGreeting.split('\n');
+
+        // Replace single quotes with 'u0027' in each element of the array
+        const restrictedWordModified = restrictedWordArray.map((word) => word.replace(/'/g, 'u0027'));
+        const defaultGreetingModified = defaultGreetingArray.map((greeting) => greeting.replace(/'/g, 'u0027'));
+
+        // Combine the modified array elements back into a single string with '|'
+        const restrictedWordFinal = restrictedWordModified.join('|');
+        const defaultGreetingFinal = defaultGreetingModified.join('|');
+
         Axios.post("https://web-intractive-system-app-api.onrender.com/room/create", {
             roomName : roomName,
             roomDescription : roomDescription,
@@ -76,8 +89,8 @@ export const CreateRoom = (props) => {
             ownerId : userId,
             roomMode : 0,
             roomStatus : 0,
-            restrictedWord : restrictedWord,
-            defaultGreeting : defaultGreeting,
+            restrictedWord : restrictedWordFinal,
+            defaultGreeting : defaultGreetingFinal,
             gameMode : 0,
             themeIndex : 0,
             layoutDirection : 0,
@@ -125,19 +138,35 @@ export const CreateRoom = (props) => {
         <div className="container">
         <table className="user-table">
             <tbody>
+                <tr>
+                    <th className="user-table-label-cell" style={{ padding: '10px' }}>Active mode: </th>
+                    <td style={{ padding: '29px' }}>
+                    <div className="form-check form-switch custom-switch-input">
+                        <input
+                            type="checkbox"
+                            className="form-check-input"
+                            role="switch"
+                            checked={isActiveChecked}
+                            onChange={() => setIsActiveChecked(!isActiveChecked)}
+                        />
+                    </div>
+                    </td>
+                </tr>
             <tr>
                         <th className="user-table-label-cell" style={{ padding: '10px' }}>Start Date: </th>
                         <td style={{ padding: '10px' }}>
                             <DatePicker
                                      // Set the width to 100%
                                     className="form-control custom-datepicker-width-create-room" // Apply the custom-datepicker class here
-                                    selected={startDate}
+                                    selected={isActiveChecked ? new Date() : startDate} // Conditionally set to new Date()
                                     onChange={(date) => setStartDate(date)}
                                     showTimeSelect
                                     timeFormat="HH:mm"
                                     timeIntervals={15}
                                     timeCaption="Time"
                                     dateFormat="MMMM d, yyyy h:mm aa"
+                                    disabled={!isActiveChecked} 
+                                    minDate={isActiveChecked ? new Date() : null} // Set minDate conditionally
                                 />
                         </td>
                     </tr>
@@ -146,13 +175,16 @@ export const CreateRoom = (props) => {
                         <td style={{ padding: '10px' }}>
                             <DatePicker
                                 className="form-control custom-datepicker-width-create-room"
-                                selected={endDate}
+                                selected={isActiveChecked ? new Date() : endDate} // Conditionally set to new Date()
                                 onChange={(date) => setEndDate(date)}
                                 showTimeSelect
                                 timeFormat="HH:mm"
                                 timeIntervals={15}
                                 timeCaption="Time"
                                 dateFormat="MMMM d, yyyy h:mm aa"
+                                disabled={!isActiveChecked}
+                                minDate={isActiveChecked ? new Date() : null} // Set minDate conditionally 
+                                
                             />
                         </td>
                     </tr>
@@ -166,11 +198,11 @@ export const CreateRoom = (props) => {
                 </tr>
                 <tr>
                     <th className="user-table-label-cell" style={{ padding: '10px' }}>Restricted Word:</th>
-                    <td style={{ padding: '10px' }}> <textarea className="form-control" id="restricWordArea" rows="4" value={restrictedWord} readOnly></textarea></td>
+                    <td style={{ padding: '10px' }}> <textarea className="form-control" id="restricWordArea" rows="4" value={restrictedWord} onChange={(e) => setRestrictedWord(e.target.value)}></textarea></td>
                 </tr>
                 <tr>
                     <th className="user-table-label-cell" style={{ padding: '10px' }}>Default Greeting:</th>
-                    <td style={{ padding: '10px' }}> <textarea className="form-control" id="defaultGreetArea" rows="4" value={defaultGreeting} readOnly></textarea></td>
+                    <td style={{ padding: '10px' }}> <textarea className="form-control" id="defaultGreetArea" rows="4" value={defaultGreeting} onChange={(e) => setDefaultGreeting(e.target.value)} ></textarea></td>
                 </tr>
             </tbody>
         </table>
