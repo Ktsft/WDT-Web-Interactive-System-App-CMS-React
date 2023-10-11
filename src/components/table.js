@@ -31,6 +31,7 @@ export const Table = ({ data, onRefresh, showToast }) =>{
 
 
     const toggleModal = (content, width, height, title) => {
+        console.log("this is the height from table.js: ", height);
         setModalContent(content);
         setModalWidth(width);
         setModalHeight(height);
@@ -74,7 +75,7 @@ export const Table = ({ data, onRefresh, showToast }) =>{
                 </thead>
                 <tbody>
                 {itemsToDisplay.map((item, index) => (
-                    <TableRow key={index} item={item} onRefresh={onRefresh} onRowClick={handleRowClick}  showToast={showToast} />
+                    <TableRow key={index} item={item} onRefresh={onRefresh} onRowClick={handleRowClick}  showToast={showToast}  openModal={toggleModal} />
                 ))}
                 </tbody>
             </table>

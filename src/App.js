@@ -3,7 +3,7 @@ import { UserProvider } from '../src/profile/userProvider';
 import logo from './logo.svg';
 import './App.css';
 
-import { Login, Dashboard } from "./profile/index";
+import { Login, Dashboard, Verify } from "./profile/index";
 
 function App() {
   return (
@@ -17,6 +17,9 @@ function App() {
         </Route>
         <Route path="/dashboard">
             <Dashboard></Dashboard>
+        </Route>
+        <Route path="/verify">
+            <Verify></Verify>
         </Route>
       </Router>
     </UserProvider>

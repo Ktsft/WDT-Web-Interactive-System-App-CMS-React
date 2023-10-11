@@ -1,7 +1,7 @@
 import React , { useState, useEffect } from 'react';
 import { GearIcon, BookIcon, TrashIcon, QrCodeIcon } from '../assets/icon';
 import { Modal, Loading } from '../components/index';
-import { RoomSetting } from "../profile/index";
+import { ActiveRoom } from "../profile/index";
 
 import Axios from 'axios';
 
@@ -17,7 +17,7 @@ function secondsToHHMMSS(seconds) {
 
 
 
-function TableRow({ item, onRefresh, onRowClick, showToast }) {
+function TableRow({ item, onRefresh, onRowClick, showToast, openModal }) {
 
   const remainingDuration = secondsToHHMMSS(item.end_date - Math.floor(Date.now() / 1000));
   
@@ -31,7 +31,10 @@ function TableRow({ item, onRefresh, onRowClick, showToast }) {
   const [modalWidth, setModalWidth] = useState(''); // Width for the modal
   const [modalHeight, setModalHeight] = useState(''); // Height for the modal
 
-
+  const onCloseModals = () => {
+      // console.log("this is the on close modal pressed");
+      setIsModalOpen(false);
+  };
 
   const token = localStorage.getItem('token');
 
@@ -56,17 +59,19 @@ function TableRow({ item, onRefresh, onRowClick, showToast }) {
 
   const toggleRoomStatus = (roomId) => {
     
-    // Send a request to toggle the room status
-      Axios.post(`/room/toggle/${roomId}`, {}, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((response) => {
-        console.log(`Room ${roomId} status toggled successfully.`);
-        // You might want to update the data or UI based on the response
-      })
-      .catch((error) => {
-        console.error(`Error toggling room ${roomId} status:`, error);
-      });
+    // // Send a request to toggle the room status
+    //   Axios.post(`/room/toggle/${roomId}`, {}, {
+    //     headers: { Authorization: `Bearer ${token}` },
+    //   })
+    //   .then((response) => {
+    //     console.log(`Room ${roomId} status toggled successfully.`);
+    //     // You might want to update the data or UI based on the response
+    //   })
+    //   .catch((error) => {
+    //     console.error(`Error toggling room ${roomId} status:`, error);
+    //   });
+
+      openModal(<ActiveRoom onCloseModals={onCloseModals} />, '700px','3000px', 'Active DateTime Option');
   };
 
 
