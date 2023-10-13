@@ -10,13 +10,16 @@ function App() {
     <UserProvider>
       <Router>
         <Route exact path="/">
-          <Redirect to="/verify"></Redirect>
+          <Redirect to="/login"></Redirect>
         </Route>
         <Route path="/login">
             <Login></Login>
         </Route>
         <Route path="/dashboard">
             <Dashboard></Dashboard>
+        </Route>
+        <Route exact path="/verify">
+          <Redirect to="/verify"></Redirect>
         </Route>
         <Route path="/verify">
             <Verify></Verify>
