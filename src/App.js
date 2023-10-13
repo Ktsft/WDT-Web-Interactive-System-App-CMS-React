@@ -10,7 +10,7 @@ function App() {
     <UserProvider>
       <Router>
         <Route exact path="/">
-          <Redirect to="/login"></Redirect>
+          <Redirect to="/verify"></Redirect>
         </Route>
         <Route path="/login">
             <Login></Login>
