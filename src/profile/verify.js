@@ -12,37 +12,37 @@ export const Verify = () => {
     const [loading, setLoading] = useState(false);
     // const [userId, setUserId] = useState(null);
     const [verifiedCode, setVerifiedCode] = useState('');
-    localStorage.removeItem('user');
+    // localStorage.removeItem('user');
 
-    useEffect(() => {
+    // useEffect(() => {
     
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
-        if (id) {
-            onHandleCheckVerifiedCode(id);
-            // setUserId(id);
-        }else{
-            history.push('/login');
-        }
+    //     const urlParams = new URLSearchParams(window.location.search);
+    //     const id = urlParams.get('id');
+    //     if (id) {
+    //         onHandleCheckVerifiedCode(id);
+    //         // setUserId(id);
+    //     }else{
+    //         history.push('/login');
+    //     }
 
-    }, []);
+    // }, []);
 
 
-    const onHandleCheckVerifiedCode = (verifiedCode) =>{
-        Axios.get("https://web-intractive-system-app-api.onrender.com/verificationCode/get/"+verifiedCode, {}, {
+    // const onHandleCheckVerifiedCode = (verifiedCode) =>{
+    //     Axios.get("https://web-intractive-system-app-api.onrender.com/verificationCode/get/"+verifiedCode, {}, {
             
-          })
-          .then(response => {
-            // window.location.href = 'admin.html';
-            console.log("this is the response: ", response.data);
-            if(response.data == "Verified Code Not Found" || response.data == "User Verified"){
-                history.push('/login');
-            }
-          })
-          .catch(error => {
-              console.log(error);
-          });
-    };
+    //       })
+    //       .then(response => {
+    //         // window.location.href = 'admin.html';
+    //         console.log("this is the response: ", response.data);
+    //         if(response.data == "Verified Code Not Found" || response.data == "User Verified"){
+    //             history.push('/login');
+    //         }
+    //       })
+    //       .catch(error => {
+    //           console.log(error);
+    //       });
+    // };
 
     const onChangeVerifiedCode = (event) => {
         console.log("value: ", event.target.value);
