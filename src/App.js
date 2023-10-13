@@ -10,20 +10,17 @@ function App() {
     <UserProvider>
       <Router>
         <Route exact path="/">
-          <Redirect to="/login"></Redirect>
+          <Redirect to="/login" />
         </Route>
         <Route path="/login">
-            <Login></Login>
+          <Login />
         </Route>
         <Route path="/dashboard">
-            <Dashboard></Dashboard>
+          <Dashboard />
         </Route>
-        <Route exact path="/verify">
-          <Redirect to="/verify"></Redirect>
-        </Route>
-        <Route path="/verify">
-            <Verify></Verify>
-        </Route>
+        {/* <Route path="/verify">
+          <Verify />
+        </Route> */}
       </Router>
     </UserProvider>
   );
