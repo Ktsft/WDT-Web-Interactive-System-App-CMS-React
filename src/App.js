@@ -15,7 +15,7 @@ function App() {
         <Route path="/dashboard">
           <Dashboard />
         </Route>
-        <Route path="/verify">
+        <Route path="/Verify">
           <Verify />
         </Route>
         <Route exact path="/">
