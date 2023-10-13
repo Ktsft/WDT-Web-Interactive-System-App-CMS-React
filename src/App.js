@@ -9,9 +9,6 @@ function App() {
   return (
     <UserProvider>
       <Router>
-        <Route exact path="/">
-          <Redirect to="/login" />
-        </Route>
         <Route path="/login">
           <Login />
         </Route>
@@ -19,7 +16,10 @@ function App() {
           <Dashboard />
         </Route>
         <Route path="/verify">
-            <Verify />
+          <Verify />
+        </Route>
+        <Route exact path="/">
+          <Redirect to="/login" />
         </Route>
       </Router>
     </UserProvider>
