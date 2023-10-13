@@ -18,9 +18,9 @@ function App() {
         <Route path="/dashboard">
           <Dashboard />
         </Route>
-        {/* <Route path="/verify">
-          <Verify />
-        </Route> */}
+        <Route path="/verify">
+            <Verify />
+        </Route>
       </Router>
     </UserProvider>
   );
