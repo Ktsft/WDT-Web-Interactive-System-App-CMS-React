@@ -25,11 +25,14 @@ import App from './App';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import { UserProvider } from '../src/profile/userProvider';
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <App />
+      <UserProvider>
+        <App />
+      </UserProvider>
     </Router>
   </React.StrictMode>,
   document.getElementById("root")
