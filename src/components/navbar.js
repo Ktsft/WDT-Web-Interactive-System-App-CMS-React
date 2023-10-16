@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-// import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+
 import { User, CreateRoom } from "../profile/index";
 import { Modal } from "./modal";
 import { UserIcon, CreateIcon, LogOutIcon } from "../assets/icon";
@@ -7,6 +9,7 @@ import { UserIcon, CreateIcon, LogOutIcon } from "../assets/icon";
 export const Navbar = ({ username, onRefresh }) => {
 
     // const history = useHistory();
+    const navigate = useNavigate();
     const [expanded, setExpanded] = useState(false); 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalContent, setModalContent] = useState(null); 
@@ -20,6 +23,7 @@ export const Navbar = ({ username, onRefresh }) => {
     const onHandleLogOut = () => {
         localStorage.removeItem('token');
         // history.push('/login')
+        navigate('/login');
     };
 
 
