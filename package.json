@@ -21,9 +21,11 @@
     "react-datetime-picker": "^5.5.1",
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
-    "react-router-dom": "^5.3.4",
+    "react-router-dom": "^6.16.0",
     "react-scripts": "5.0.1",
     "rsuite": "^5.40.0",
+    "surge": "^0.23.1",
+    "use-history": "^1.4.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

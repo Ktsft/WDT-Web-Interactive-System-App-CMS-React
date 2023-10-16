@@ -1,6 +1,6 @@
     import React, { useState, useEffect } from 'react';
     import { Loading, Table, Navbar, Toast } from '../components/index';
-    import { useUser } from './userProvider'; // Import useUser from the context
+    // import { useUser } from './userProvider'; // Import useUser from the context
     
 
     import Axios from 'axios'; // Import Axios
@@ -18,21 +18,21 @@
         const [toastHeader, setToastHeader] = useState('');
         const [toastType, setToastType] = useState('');
 
-        const { user, login, logout } = useUser(); // Access user context
+        // const { user, login, logout } = useUser(); // Access user context
         // console.log("this is the user from dashbaord: ", user)
         
         useEffect(() => {
             if (token) {
               getAllRoom(false);
-              if (user === null) {
-                // console.log("step 1");
-                // If user is null, attempt to retrieve userId from localStorage
-                const userId = localStorage.getItem('user');
-                getUserById(userId);
-              }else{
-                // console.log("step 2");
-                getUserById(user);
-              }
+            //   if (user === null) {
+            //     // console.log("step 1");
+            //     // If user is null, attempt to retrieve userId from localStorage
+            //     const userId = localStorage.getItem('user');
+            //     getUserById(userId);
+            //   }else{
+            //     // console.log("step 2");
+            //     getUserById(user);
+            //   }
             }
           }, []); // This effect runs only once when the component mounts          
 

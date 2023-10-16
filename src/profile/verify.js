@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Loading } from '../components/index';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import '../styles/app.css';
 
 import Axios from 'axios';
@@ -8,7 +8,7 @@ import Axios from 'axios';
 
 export const Verify = () => {
 
-    const history = useHistory(); 
+    // const history = useHistory(); 
     const [loading, setLoading] = useState(false);
     // const [userId, setUserId] = useState(null);
     const [verifiedCode, setVerifiedCode] = useState('');
@@ -22,7 +22,7 @@ export const Verify = () => {
             onHandleCheckVerifiedCode(id);
             // setUserId(id);
         }else{
-            history.push('/login');
+            // history.push('/login');
         }
 
     }, []);
@@ -36,7 +36,7 @@ export const Verify = () => {
             // window.location.href = 'admin.html';
             console.log("this is the response: ", response.data);
             if(response.data == "Verified Code Not Found" || response.data == "User Verified"){
-                history.push('/login');
+                // history.push('/login');
             }
           })
           .catch(error => {

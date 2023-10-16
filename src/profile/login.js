@@ -1,10 +1,11 @@
 import { getAllByDisplayValue, waitFor } from '@testing-library/react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { UserIcon, PasswordIcon, EmailIcon, AuthenticatePassIcon } from '../assets/icon';
 import { Button, Loading, Modal } from '../components/index';
-import { useUser } from './userProvider';
+// import { useUser } from './userProvider';
 import '../styles/app.css';
 
 import Axios from 'axios'; // Import Axios
@@ -29,8 +30,9 @@ export const Login = () => {
     const [showModal, setShowModal] = useState(false);
     const [modalContent, setModalContent] = useState('');
     
-    const history = useHistory(); 
-    const { login } = useUser(); 
+    // const history = useHistory(); 
+    const navigate = useNavigate();
+    // const { login } = useUser(); 
 
     const clearInput = () => {
         setEmail('');
@@ -135,9 +137,10 @@ export const Login = () => {
                 // window.location.href = "admin.html";
                 setLoading(false);
                 let userId = response.data.data.userId;
-                login(userId);
+                // login(userId);
                 console.log("U have login successfully");
-                history.push('/dashboard');
+                // history.push('/dashboard');
+                navigate('/dashboard');
             })
             .catch(error => {
                 console.log("Error catch from login: ", error.response.data);
