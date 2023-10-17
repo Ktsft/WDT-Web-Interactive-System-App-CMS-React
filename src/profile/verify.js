@@ -62,6 +62,9 @@ export const Verify = () => {
         }, { })
           .then(response => {
             console.log("this is the response body: ", response);
+            if(response.data == "Your account has been verified!"){
+                navigate('/login');
+            }
           })
           .catch(error => {
               console.log(error);
