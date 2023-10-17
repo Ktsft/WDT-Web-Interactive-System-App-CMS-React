@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Component } from 'react';
-import { Button, Loading } from '../components/index';
+import { Button, Loading, Modal } from '../components/index';
 import { useParams } from 'react-router-dom';
 // import { useHistory } from 'react-router-dom';
 import '../styles/app.css';
@@ -13,6 +13,10 @@ export const Verify = () => {
     const navigate = useNavigate();
     // const history = useHistory(); 
     const [loading, setLoading] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [modalContent, setModalContent] = useState('');
+    const [modalTitle, setModalTitle] = useState('');
+
     // const [userId, setUserId] = useState(null);
     const [verifiedCode, setVerifiedCode] = useState('');
     localStorage.removeItem('user');
@@ -61,15 +65,26 @@ export const Verify = () => {
             id : verifiedCode,
         }, { })
           .then(response => {
-            console.log("this is the response body: ", response);
-            if(response.data == "Your account has been verified!"){
-                navigate('/login');
-            }
+                console.log("this is the response body: ", response);
+                if(response.data == "Your account has been verified!"){
+                    navigate('/login');
+                }else{
+                    let title = "verify account failed";
+                    let message = "Please contact IT support verify code invalid";
+                    showActivateModal(title, message);
+                }
           })
           .catch(error => {
               console.log(error);
           });
         
+    };
+
+
+    const showActivateModal = (title, message) => {
+        setModalContent(message);
+        setShowModal(true);
+        setModalTitle(title);
     };
 
 
@@ -92,7 +107,20 @@ export const Verify = () => {
                 </div>
             </div>
             </div>
+
+
+            <Modal 
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                title={registerTitle}
+                content={modalContent}
+                width="400px"
+                height="200px"
+            />
+
         </div>
+
+        
     )
 
 };
