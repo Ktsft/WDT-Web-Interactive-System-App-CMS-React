@@ -1,6 +1,6 @@
     import React, { useState, useEffect } from 'react';
     import { Loading, Table, Navbar, Toast } from '../components/index';
-    // import { useUser } from './userProvider'; // Import useUser from the context
+    import { useUser } from './userProvider'; // Import useUser from the context
     
 
     import Axios from 'axios'; // Import Axios
@@ -18,7 +18,7 @@
         const [toastHeader, setToastHeader] = useState('');
         const [toastType, setToastType] = useState('');
 
-        // const { user, login, logout } = useUser(); // Access user context
+        const { user, login, logout } = useUser(); // Access user context
         // console.log("this is the user from dashbaord: ", user)
         
         useEffect(() => {

@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserIcon, PasswordIcon, EmailIcon, AuthenticatePassIcon } from '../assets/icon';
 import { Button, Loading, Modal } from '../components/index';
-// import { useUser } from './userProvider';
+import { useUser } from './userProvider';
 import '../styles/app.css';
 
 import Axios from 'axios'; // Import Axios
@@ -32,7 +32,7 @@ export const Login = () => {
     
     // const history = useHistory(); 
     const navigate = useNavigate();
-    // const { login } = useUser(); 
+    const { login } = useUser(); 
 
     const clearInput = () => {
         setEmail('');
@@ -137,7 +137,7 @@ export const Login = () => {
                 // window.location.href = "admin.html";
                 setLoading(false);
                 let userId = response.data.data.userId;
-                // login(userId);
+                login(userId);
                 console.log("U have login successfully");
                 // history.push('/dashboard');
                 navigate('/dashboard');
