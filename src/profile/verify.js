@@ -112,7 +112,7 @@ export const Verify = () => {
             <Modal 
                 show={showModal}
                 onHide={() => setShowModal(false)}
-                title={registerTitle}
+                title={modalTitle}
                 content={modalContent}
                 width="400px"
                 height="200px"
