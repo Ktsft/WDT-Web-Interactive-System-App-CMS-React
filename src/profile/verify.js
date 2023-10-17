@@ -1,42 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component } from 'react';
 import { Button, Loading } from '../components/index';
+import { useParams } from 'react-router-dom';
 // import { useHistory } from 'react-router-dom';
 import '../styles/app.css';
-
+import { useNavigate } from 'react-router-dom';
 import Axios from 'axios';
 
 
 export const Verify = () => {
 
+    const { id } = useParams();
+    const navigate = useNavigate();
     // const history = useHistory(); 
     const [loading, setLoading] = useState(false);
     // const [userId, setUserId] = useState(null);
     const [verifiedCode, setVerifiedCode] = useState('');
     localStorage.removeItem('user');
-
+    
     useEffect(() => {
     
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
-        if (id) {
-            onHandleCheckVerifiedCode(id);
+        // const urlParams = new URLSearchParams(window.location.search);
+        // const id = urlParams.get('id');
+        console.log("this is the id: ", id);
+        if (id == 'id' || id == '') {
+            navigate('/login');
             // setUserId(id);
-        }else{
-            // history.push('/login');
+        }else{  
+            onHandleCheckVerifiedCode(id);
         }
 
     }, []);
 
 
     const onHandleCheckVerifiedCode = (verifiedCode) =>{
+        
         Axios.get("https://web-intractive-system-app-api.onrender.com/verificationCode/get/"+verifiedCode, {}, {
-            
           })
           .then(response => {
             // window.location.href = 'admin.html';
             console.log("this is the response: ", response.data);
             if(response.data == "Verified Code Not Found" || response.data == "User Verified"){
                 // history.push('/login');
+                navigate('/login');
             }
           })
           .catch(error => {
