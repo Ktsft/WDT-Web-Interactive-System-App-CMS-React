@@ -61,6 +61,7 @@ export const Verify = () => {
 
 
     const onHandleAccountVerified = () => {
+        // console.log("test");
         Axios.post("https://web-intractive-system-app-api.onrender.com/account/verify", {
             id : verifiedCode,
         }, { })
@@ -68,16 +69,15 @@ export const Verify = () => {
                 console.log("this is the response body: ", response);
                 if(response.data == "Your account has been verified!"){
                     navigate('/login');
-                }else{
-                    let title = "verify account failed";
-                    let message = "Please contact IT support verify code invalid";
-                    showActivateModal(title, message);
                 }
           })
           .catch(error => {
-              console.log(error);
+                let title = "verify account failed";
+                let message = "Please contact IT support verify code invalid";
+                showActivateModal(title, message);
+                console.log("error package from catch");
           });
-        
+        console.log("this is the value: ", verifiedCode);
     };
 
 
