@@ -14,7 +14,7 @@ export const UserProvider = ({ children }) => {
     // Check local storage for user data when the app loads
     const storedUser = JSON.parse(localStorage.getItem('user'));
 
-    console.log("this is the storedUser from user provider: ", storedUser);
+    // console.log("this is the storedUser from user provider: ", storedUser);
     if (storedUser) {
       setUser(storedUser);
     }
@@ -23,7 +23,7 @@ export const UserProvider = ({ children }) => {
 
 
   const login = (userData, userRoles) => {
-    console.log("this is user roles: ", userRoles);
+    // console.log("this is user roles: ", userRoles);
     localStorage.setItem('user', JSON.stringify(userData));
     localStorage.setItem('role', userRoles);
     setUser(userData);

@@ -25,7 +25,7 @@ export const Verify = () => {
     
         // const urlParams = new URLSearchParams(window.location.search);
         // const id = urlParams.get('id');
-        console.log("this is the id: ", id);
+        // console.log("this is the id: ", id);
         if (id == 'id' || id == '') {
             navigate('/login');
             // setUserId(id);
@@ -42,7 +42,7 @@ export const Verify = () => {
           })
           .then(response => {
             // window.location.href = 'admin.html';
-            console.log("this is the response: ", response.data);
+            // console.log("this is the response: ", response.data);
             if(response.data == "Verified Code Not Found" || response.data == "User Verified"){
                 // history.push('/login');
                 navigate('/login');
@@ -66,7 +66,7 @@ export const Verify = () => {
             id : verifiedCode,
         }, { })
           .then(response => {
-                console.log("this is the response body: ", response);
+                // console.log("this is the response body: ", response);
                 if(response.data == "Your account has been verified!"){
                     navigate('/login');
                 }
@@ -77,7 +77,7 @@ export const Verify = () => {
                 showActivateModal(title, message);
                 console.log("error package from catch");
           });
-        console.log("this is the value: ", verifiedCode);
+        // console.log("this is the value: ", verifiedCode);
     };
 
 

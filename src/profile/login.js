@@ -90,8 +90,8 @@ export const Login = () => {
         
         setLoading(true);
         if(isRegistrationActive){
-            console.log("this is the password: ", password);
-            console.log("this is the confirm pass: ", confirmPassword);
+            // console.log("this is the password: ", password);
+            // console.log("this is the confirm pass: ", confirmPassword);
             if (password === confirmPassword) {
                 
             

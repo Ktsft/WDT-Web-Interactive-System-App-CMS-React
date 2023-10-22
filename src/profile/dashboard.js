@@ -22,7 +22,7 @@
 
         const { user, login, logout } = useUser(); // Access user context
         // console.log("this is the user from dashbaord: ", user)
-        console.log("this is the outside user: ", user);
+        // console.log("this is the outside user: ", user);
         useEffect(() => {
             if(token && user){
                 getUserById(user);
@@ -81,7 +81,7 @@
             })
             .then(response => {
                 // console.log('User response:', response.data.username);
-                console.log("this is the username from dashbaord: ", response.data.username);
+                // console.log("this is the username from dashbaord: ", response.data.username);
                 setUsername(response.data.username);
                 // console.log("this is the username: ", username);
             })

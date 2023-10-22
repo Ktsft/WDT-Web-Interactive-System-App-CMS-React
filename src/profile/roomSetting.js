@@ -161,7 +161,7 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
                 case 'background_img':
                     // console.log("i access background");
                     setBackgroundImg(reader.result);
-                    console.log("this is the result of backgrounf image:", backgroundImg);
+                    // console.log("this is the result of backgrounf image:", backgroundImg);
                     break;
                 case 'app_logo_img':
                     // console.log("i access app logo");
