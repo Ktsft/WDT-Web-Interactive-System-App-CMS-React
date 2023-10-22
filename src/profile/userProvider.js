@@ -22,13 +22,16 @@ export const UserProvider = ({ children }) => {
 
 
 
-  const login = (userData) => {
+  const login = (userData, userRoles) => {
+    console.log("this is user roles: ", userRoles);
     localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('role', userRoles);
     setUser(userData);
   };
 
   const logout = () => {
     localStorage.removeItem('user');
+    localStorage.removeItem('roles');
     setUser(null);
   };
 

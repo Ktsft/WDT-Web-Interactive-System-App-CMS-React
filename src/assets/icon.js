@@ -3,7 +3,7 @@ import { FaLock, FaBook, FaTrashCan, FaQrcode, FaQ } from "react-icons/fa6";
 import { HiOutlineMail } from "react-icons/hi";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { BsFillGearFill } from "react-icons/bs";
-import { FaEdit, FaWindowClose, FaPlusSquare } from "react-icons/fa";
+import { FaEdit, FaWindowClose, FaPlusSquare, FaAddressCard } from "react-icons/fa";
 import { IoMdLogOut } from "react-icons/io";
 
 
@@ -22,3 +22,4 @@ export const EditIcon = FaEdit;
 export const CloseIcon = FaWindowClose;
 export const CreateIcon = FaPlusSquare;
 export const LogOutIcon = IoMdLogOut;
+export const PersonalInfo = FaAddressCard;

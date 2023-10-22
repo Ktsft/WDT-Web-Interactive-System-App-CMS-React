@@ -1,14 +1,13 @@
 import React , { useState } from 'react';
 import { Modal } from '../components/index';
-import TableRow from './tableRow';
-import { RoomSetting } from '../profile';
+import { UserProfile } from '../profile';
+import SuperAdminTableRow from './superadminTableRow'
 
-
-export const Table = ({ data, onRefresh, showToast }) =>{
-
+export const SuperAdminTable = ({ data, onRefresh }) => {
 
     const itemsPerPage = 10; // Number of items to display per page
     const [currentPage, setCurrentPage] = useState(1);
+
 
     const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
     const [modalContent, setModalContent] = useState(''); // Content for the modal
@@ -17,7 +16,7 @@ export const Table = ({ data, onRefresh, showToast }) =>{
     const [modalHeight, setModalHeight] = useState(''); // Height for the modal
     const [selectedId, setSelectedId] = useState(null);
 
-    const startIndex = (currentPage - 1) * itemsPerPage;
+     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
 
     const itemsToDisplay = data.slice(startIndex, endIndex);
@@ -31,7 +30,6 @@ export const Table = ({ data, onRefresh, showToast }) =>{
 
 
     const toggleModal = (content, width, height, title) => {
-        // console.log("this is the height from table.js: ", height);
         setModalContent(content);
         setModalWidth(width);
         setModalHeight(height);
@@ -40,25 +38,17 @@ export const Table = ({ data, onRefresh, showToast }) =>{
     };
 
 
+    const onHandleRowClick = (id) => {
+        console.log("superadmin row clicked: ", id);
+        toggleModal(<UserProfile id={id} onClose={onCloseModal} />, '900px', '1500px', 'User Profile')
+    };
+
+
+    
     const onCloseModal = () => {
         // console.log("this is the on close modal pressed");
         setIsModalOpen(false);
     };
-
-
-    const onCloseModals = () => {
-        // console.log("this is the on close modal pressed");
-        onRefresh(true);
-        setIsModalOpen(false);
-    };
-
-
-    const handleRowClick = (id) => {
-        // console.log("i have access the handle row click: ", id);
-        setSelectedId(id); // Set the selected ID
-        toggleModal(<RoomSetting id={id} onClose={onCloseModal} onCloseModals={onCloseModals} showToast={showToast}/>, '1000px', '1500px', 'Room Setting');
-      };
-
 
 
     return(
@@ -66,19 +56,20 @@ export const Table = ({ data, onRefresh, showToast }) =>{
             <table className="table table-striped">
                 <thead>
                     <tr>
-                        <th scope="col">Room ID</th>
-                        <th scope="col">Room Name</th>
-                        <th scope="col">Remaining Time</th>
-                        <th scope="col">Active</th>
-                        <th scope="col">Action</th>
+                        <th scope="col">No</th>
+                        <th scope="col">User Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Account Status</th>
                     </tr>
                 </thead>
                 <tbody>
                 {itemsToDisplay.map((item, index) => (
-                    <TableRow key={index} item={item} onRefresh={onRefresh} onRowClick={handleRowClick}  showToast={showToast}  openModal={toggleModal} />
+                    <SuperAdminTableRow key={index} item={item} onRefresh={onRefresh} onRowClick={onHandleRowClick} />
                 ))}
                 </tbody>
             </table>
+
+
 
             <nav aria-label="Page navigation">
                 <ul className="pagination">
@@ -114,6 +105,7 @@ export const Table = ({ data, onRefresh, showToast }) =>{
             </nav>
 
 
+
             {isModalOpen && (
                 <Modal
                     show={isModalOpen}
@@ -123,9 +115,10 @@ export const Table = ({ data, onRefresh, showToast }) =>{
                     height={modalHeight}
                     content={modalContent}
                 />
-                )}
+            )}
 
 
         </div>
     )
+
 }

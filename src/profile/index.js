@@ -5,3 +5,4 @@ export * from "./createRoom";
 export * from "./roomSetting";
 export * from "./activeRoom";
 export * from "./verify";
+export * from "./userProfile";

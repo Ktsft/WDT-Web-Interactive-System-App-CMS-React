@@ -1,5 +1,5 @@
     import React, { useState, useEffect } from 'react';
-    import { Loading, Table, Navbar, Toast } from '../components/index';
+    import { Loading, Table, Navbar, Toast, SuperAdminTable } from '../components/index';
     import { useUser } from './userProvider'; // Import useUser from the context
     
 
@@ -8,6 +8,7 @@
     export const Dashboard = () => {
 
         const token = localStorage.getItem('token');
+        const roles = localStorage.getItem('role');
 
         const [loading, setLoading] = useState(false);
         const [room, setRoom] = useState([]);
@@ -17,13 +18,14 @@
         const [toastMessage, setToastMessage] = useState('');
         const [toastHeader, setToastHeader] = useState('');
         const [toastType, setToastType] = useState('');
+        const [adminRow, setAdminRow] = useState([]);
 
         const { user, login, logout } = useUser(); // Access user context
         // console.log("this is the user from dashbaord: ", user)
         
         useEffect(() => {
             if (token) {
-              getAllRoom(false);
+            //   getAllRoom(false);
             //   if (user === null) {
             //     // console.log("step 1");
             //     // If user is null, attempt to retrieve userId from localStorage
@@ -33,6 +35,13 @@
             //     // console.log("step 2");
             //     getUserById(user);
             //   }
+
+                if(roles === 'superadmin'){
+                    getUserRolesAdmin();
+                }else if(roles === 'admin'){
+                    getAllRoom(false);
+                }
+
             }
           }, []); // This effect runs only once when the component mounts          
 
@@ -106,14 +115,38 @@
         };
 
 
+        const getUserRolesAdmin = () => {
+            Axios.get("https://web-intractive-system-app-api.onrender.com/get/adminAccount", {
+            })
+            .then(response => {
+                // console.log("this is the response: ", response);
+                setAdminRow(response.data)
+            })
+            .catch(error => {
+                console.log("Error catch from dashbaord get all room");
+            })
+        };
+
+
         return(
             <div>
                 <Loading show={loading}/>
                 <div style={{ paddingTop: '95px' }}>
                     <div className="container dashboard-container">
-                        <Navbar onShowModal={toggleModal}  username={ username? username:''} onRefresh={() => getAllRoom(true)} />
+                        <Navbar onShowModal={toggleModal}  username={ username? username:''} onRefresh={() => getAllRoom(true)} isRoles = {roles} />
                         <div className="table-container">
-                            <Table data={room} onRefresh={() => getAllRoom(false)} showToast={showToast}  />
+                            {roles === 'admin' ? (
+                            // Render admin table if roles are 'admin'
+                                <Table data={room} onRefresh={() => getAllRoom(false)} showToast={showToast} />
+                            ) : roles === 'superadmin' ? (
+                            // Render superadmin table if roles are 'superadmin'
+                                // <p>Unknown user role</p>
+                                <SuperAdminTable data={adminRow} onRefresh={() => getUserRolesAdmin()} />
+                                // <SuperAdminTable data={room} onRefresh={() => getAllRoom(false)} showToast={showToast} />
+                            ) : (
+                            // Render some default content when the role is neither 'admin' nor 'superadmin'
+                            <p>Unknown user role</p>
+                            )}
                         </div>
                     </div>
                 </div>

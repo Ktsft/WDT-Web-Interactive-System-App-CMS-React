@@ -133,11 +133,13 @@ export const Login = () => {
                 }
             })
             .then(response => {
+                // console.log("this is the data: ", response.data.data);
                 localStorage.setItem("token", response.data.data.token);
                 // window.location.href = "admin.html";
                 setLoading(false);
                 let userId = response.data.data.userId;
-                login(userId);
+                let userRole = response.data.data.role;
+                login(userId, userRole);
                 console.log("U have login successfully");
                 // history.push('/dashboard');
                 navigate('/dashboard');
