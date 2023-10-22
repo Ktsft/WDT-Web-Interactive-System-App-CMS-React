@@ -62,12 +62,16 @@ export const Navbar = ({ username, onRefresh, isRoles }) => {
     };
 
 
+    const onHandleUserNameClick = () => {
+        toggleModal(<User onCloseModal={() => onCloseModal()}  />,'700px','900px', 'Information')
+    }; 
+
     return(
         <div className="container">
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <UserIcon style={{ marginRight: '10px' }} />
-                    <a className="navbar-brand" href="#" onClick={() =>toggleModal(<User onCloseModal={onCloseModal} />,'700px','900px', 'Information')}>
+                    <a className="navbar-brand" href="#" onClick={onHandleUserNameClick}>
                         {username}
                     </a>
                 </div>

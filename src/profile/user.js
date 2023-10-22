@@ -6,7 +6,7 @@ import '../styles/app.css';
 
  
 
-export const User = (props) => {
+export const User = ({onCloseModal}) => {
     // console.log("this is the props from user.js: ", props);
     
     const userId = localStorage.getItem('user');
@@ -193,7 +193,7 @@ export const User = (props) => {
            <hr />
            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Button type="button" classType="btn btn-primary"  text={isEditing ? "Save" : "Edit"} buttonWidth="20%" onClick={isEditing ? onHandleSave : onHandleEdit}  />
-                <Button type="button" classType="btn btn-secondary"  text="Close" buttonWidth="20%" onClick={props.onCloseModal} />
+                <Button type="button" classType="btn btn-secondary"  text="Close" buttonWidth="20%" onClick={onCloseModal} />
             </div>
 
 

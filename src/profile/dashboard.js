@@ -22,28 +22,17 @@
 
         const { user, login, logout } = useUser(); // Access user context
         // console.log("this is the user from dashbaord: ", user)
-        
+        console.log("this is the outside user: ", user);
         useEffect(() => {
-            if (token) {
-            //   getAllRoom(false);
-            //   if (user === null) {
-            //     // console.log("step 1");
-            //     // If user is null, attempt to retrieve userId from localStorage
-            //     const userId = localStorage.getItem('user');
-            //     getUserById(userId);
-            //   }else{
-            //     // console.log("step 2");
-            //     getUserById(user);
-            //   }
-
+            if(token && user){
+                getUserById(user);
                 if(roles === 'superadmin'){
                     getUserRolesAdmin();
                 }else if(roles === 'admin'){
                     getAllRoom(false);
                 }
-
             }
-          }, []); // This effect runs only once when the component mounts          
+          }, [token, user]); // This effect runs only once when the component mounts          
 
 
         if (token) {
@@ -65,7 +54,7 @@
             .then(response => {
                 // console.log('this is the room resposne: ', response.data);
                 setRoom(response.data);
-                console.log("this is the response data from dashboard: ", response.data['end_dates']);
+                // console.log("this is the response data from dashboard: ", response.data['end_dates']);
                 if(isRefresh === true){
                     setToastHeader('Successful');
                     setToastMessage('Create Room Successfully'); // Set toast message on error
@@ -85,12 +74,14 @@
 
 
         const getUserById = (userId) => {
+            console.log("this is the userid from getUserByid: ", userId);
             // console.log("this is the userId: ", userId);
             Axios.get(`https://web-intractive-system-app-api.onrender.com/user/get/${userId}`, {
               headers: { Authorization: `Bearer ${token}` }
             })
             .then(response => {
                 // console.log('User response:', response.data.username);
+                console.log("this is the username from dashbaord: ", response.data.username);
                 setUsername(response.data.username);
                 // console.log("this is the username: ", username);
             })
