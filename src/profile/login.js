@@ -195,7 +195,7 @@ export const Login = () => {
                         <div className="input-group flex-nowrap mb-3 justify-content-between"> {/* Add justify-content-between */}
                             <Button type="button" classType={`btn ${isLoginActive ? 'btn-primary' : 'btn-secondary'} btn-lg`} text="Login" onClick={handleLoginOnClick} disabled={loading} />
                             <Button type="button" classType={`btn ${isLoginActive ? 'btn-secondary' : 'btn-primary'} btn-lg`} text="Register " onClick={handleRegisteronClick}  disabled={loading} />
-                        </div>
+                        </div> 
                         {isRegistrationActive ? (
                             registrationForm
                         ):(

@@ -1,7 +1,7 @@
 import React , { useState } from 'react';
 import { Modal } from '../components/index';
 import TableRow from './tableRow';
-import { RoomSetting } from '../profile';
+import { RoomSetting, GrettingRoom } from '../profile';
 
 
 export const Table = ({ data, onRefresh, showToast }) =>{
@@ -57,7 +57,14 @@ export const Table = ({ data, onRefresh, showToast }) =>{
         // console.log("i have access the handle row click: ", id);
         setSelectedId(id); // Set the selected ID
         toggleModal(<RoomSetting id={id} onClose={onCloseModal} onCloseModals={onCloseModals} showToast={showToast}/>, '1000px', '1500px', 'Room Setting');
-      };
+    };
+
+
+
+    const handleRowSettingClick = (id) =>{
+        // console.log("this is handle row setting click: ", id);
+        toggleModal(<GrettingRoom id={id} onClose={onCloseModal}/> , '1200px', '1500px', 'Greeting List');
+    };
 
 
 
@@ -75,7 +82,7 @@ export const Table = ({ data, onRefresh, showToast }) =>{
                 </thead>
                 <tbody>
                 {itemsToDisplay.map((item, index) => (
-                    <TableRow key={index} item={item} onRefresh={onRefresh} onRowClick={handleRowClick}  showToast={showToast}  openModal={toggleModal} />
+                    <TableRow key={index} item={item} onRefresh={onRefresh} onRowClick={handleRowClick} showToast={showToast}  openModal={toggleModal} onRowClickSetting={handleRowSettingClick} />
                 ))}
                 </tbody>
             </table>

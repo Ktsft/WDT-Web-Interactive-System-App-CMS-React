@@ -1,6 +1,5 @@
-import React , { useState, useEffect } from 'react';
+import React , { useState } from 'react';
 import { GearIcon, BookIcon, TrashIcon, QrCodeIcon } from '../assets/icon';
-import { Modal, Loading } from '../components/index';
 import { ActiveRoom } from "../profile/index";
 
 import Axios from 'axios';
@@ -17,19 +16,15 @@ function secondsToHHMMSS(seconds) {
 
 
 
-function TableRow({ item, onRefresh, onRowClick, showToast, openModal }) {
+function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClickSetting }) {
 
   const remainingDuration = secondsToHHMMSS(item.end_date - Math.floor(Date.now() / 1000));
   
   const [roomStatus, setRoomStatus] = useState(item.room_status);
-  const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Adjust as needed
 
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
-  const [modalContent, setModalContent] = useState(''); // Content for the modal
-  const [modalTitle, setModalTitle] = useState(''); // Title for the modal
-  const [modalWidth, setModalWidth] = useState(''); // Width for the modal
-  const [modalHeight, setModalHeight] = useState(''); // Height for the modal
+  
 
   const onCloseModals = () => {
       // console.log("this is the on close modal pressed");
@@ -173,7 +168,7 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal }) {
           <GearIcon/>
         </button>
         <span style={{ marginLeft: '10px' }}></span>
-        <button className="btn btn-outline-primary" id={`gearButton_${item.id}`}>
+        <button className="btn btn-outline-primary" id={`gearButton_${item.id}`} onClick={() => onRowClickSetting(item.id)}>
           <BookIcon/>
         </button>
         <span style={{ marginLeft: '10px' }}></span>

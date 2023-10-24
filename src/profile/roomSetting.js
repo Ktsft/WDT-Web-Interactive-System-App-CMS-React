@@ -70,11 +70,11 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
                     //     setStartDate(new Date());
                     //     setEndDate(new Date());
                     // }
-
+                    
                     if (response.data["start_date"] === "1970-01-01T00:00:00.000Z" && response.data["end_dates"] === "1970-01-01T00:00:00.000Z") {
                         setStartDate(null);
                         setEndDate(null);
-                    } else {
+                    } else if(response.data["start_date"] != null && response.data["end_dates"] != null) {
                         const startDateValue = moment(response.data["start_date"]).toDate();
                         setStartDate(startDateValue);
                     
