@@ -40,7 +40,7 @@ export const GrettingRoom = ({ id = 'default-id', onClose}) => {
 
 
     const onHandleGrettingMessageDetailByRoom = (id) => {
-        console.log("this is the id", id);
+        //console.log("this is the id", id);
         Axios.get("https://web-intractive-system-app-api.onrender.com/get/greetingMessageDetailByRoom/"+id, {}, {
         })
         .then(response => {

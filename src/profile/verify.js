@@ -62,8 +62,10 @@ export const Verify = () => {
 
     const onHandleAccountVerified = () => {
         // console.log("test");
+        // console.log("user id: ", id);
         Axios.post("https://web-intractive-system-app-api.onrender.com/account/verify", {
-            id : verifiedCode,
+            id : id,
+            verifiedCode: verifiedCode
         }, { })
           .then(response => {
                 // console.log("this is the response body: ", response);
