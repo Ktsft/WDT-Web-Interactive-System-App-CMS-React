@@ -43,10 +43,21 @@ export const Verify = () => {
           .then(response => {
             // window.location.href = 'admin.html';
             // console.log("this is the response: ", response.data);
-            if(response.data == "Verified Code Not Found" || response.data == "User Verified"){
+            if(response.data == "Verified Code Not Found"){
                 // history.push('/login');
-                navigate('/login');
-            }else if(response.data == "expired"){
+                let title = "Invalid verification code";
+                let message = "Verification code is invalid!";
+                setShowModal(true);
+                setModalTitle(title);
+                setModalContent(message);
+            }else if(response.data == "User Verified"){
+                let title = "User verified";
+                let message = "Your account has activated!";
+                setShowModal(true);
+                setModalTitle(title);
+                setModalContent(message);
+            }
+            else if(response.data == "expired"){
                     let title = "Expired";
                     let message = "Your verify link has expired please register again!";
                     setShowModal(true);
@@ -55,7 +66,7 @@ export const Verify = () => {
             }
           })
           .catch(error => {
-              console.log(error);
+            console.log(error);
           });
     };
 

@@ -29,6 +29,7 @@ export const Login = () => {
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [modalContent, setModalContent] = useState('');
+    const [modalTitle, setModalTitle] = useState('');
     
     // const history = useHistory(); 
     const navigate = useNavigate();
@@ -109,10 +110,12 @@ export const Login = () => {
                         setLoading(false);
                         console.log("Success","Register account successfully")
                         // window.location.reload(); // Reload the current page
-                        setIsLoginActive(true);
-                        setIsRegistrationActive(false);
                         setEmail('');
-                        setPassword('');                        
+                        setPassword('');              
+                        
+                        setModalContent("You have register successfully!");
+                        setModalTitle("Registered Account");
+                        setShowModal(true);
                         // showModal(response.data)
                         // window.location.href = 'login.html';
                     })
@@ -159,7 +162,14 @@ export const Login = () => {
 
     const showLoginFailedModal = (errorMessage) =>{
         setModalContent(errorMessage);
+        setModalTitle("Login Failed");
         setShowModal(true);
+    };
+
+    const handleModalConfirmation = () => {
+        setShowModal(false);
+        setIsLoginActive(true);
+        setIsRegistrationActive(false);
     };
 
 
@@ -220,10 +230,11 @@ export const Login = () => {
             <Modal 
                 show={showModal}
                 onHide={() => setShowModal(false)}
-                title="Login Failed"
+                title={modalTitle}
                 content={modalContent}
                 width="400px"
                 height="200px"
+                confirmationCallback={handleModalConfirmation} 
             />
         
         </div>
