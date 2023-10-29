@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 
-export const Modal = ({ show, onHide, title, content, width, height }) => {
+export const Modal = ({ show, onHide, title, content, width, height, confirmationCallback  }) => {
         
     const modalStyle = {
         // width: width,
@@ -16,7 +16,11 @@ export const Modal = ({ show, onHide, title, content, width, height }) => {
         overflowY: 'auto',
     };
 
-
+    const handleConfirmation = () => {
+        if (confirmationCallback) {
+            confirmationCallback();
+        }
+    };
 
     return (
         <div className={`modal ${show ? 'd-block' : ''}`} tabIndex="-1" role="dialog" style={{ display: show ? 'block' : 'none' }}>
@@ -31,9 +35,13 @@ export const Modal = ({ show, onHide, title, content, width, height }) => {
                     <div className="modal-body" style={modalBodyStyle}>
                         {content}
                     </div>
-                    {/* <div className="modal-footer">
-                            <Button type="button" classType="btn btn-secondary" onClick={onHide} text="Close" buttonWidth="15%" />
-                    </div> */}
+                    {confirmationCallback && (
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-primary" onClick={handleConfirmation}>
+                                Confirm
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

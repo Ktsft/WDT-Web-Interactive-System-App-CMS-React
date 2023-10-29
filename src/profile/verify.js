@@ -46,6 +46,12 @@ export const Verify = () => {
             if(response.data == "Verified Code Not Found" || response.data == "User Verified"){
                 // history.push('/login');
                 navigate('/login');
+            }else if(response.data == "expired"){
+                    let title = "Expired";
+                    let message = "Your verify link has expired please register again!";
+                    setShowModal(true);
+                    setModalTitle(title);
+                    setModalContent(message);
             }
           })
           .catch(error => {
@@ -70,7 +76,13 @@ export const Verify = () => {
           .then(response => {
                 // console.log("this is the response body: ", response);
                 if(response.data == "Your account has been verified!"){
-                    navigate('/login');
+                    // navigate('/login');
+
+                    let title = "Activate Success";
+                    let message = "Your account have activate successfully!";
+                    setShowModal(true);
+                    setModalTitle(title);
+                    setModalContent(message);
                 }
           })
           .catch(error => {
@@ -87,6 +99,12 @@ export const Verify = () => {
         setModalContent(message);
         setShowModal(true);
         setModalTitle(title);
+    };
+
+
+    const handleModalConfirmation = () => {
+        setShowModal(false);
+        navigate('/login');
     };
 
 
@@ -118,6 +136,7 @@ export const Verify = () => {
                 content={modalContent}
                 width="400px"
                 height="200px"
+                confirmationCallback={handleModalConfirmation} 
             />
 
         </div>
