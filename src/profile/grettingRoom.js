@@ -13,9 +13,11 @@ export const GrettingRoom = ({ id = 'default-id', onClose}) => {
     const [messageStatus, setMessageStatus] = useState(null);
     const [loading, setLoading] = useState(false);
     const [selectedMessageIds, setSelectedMessageIds] = useState([]);
+    const [defaultImg, setDefaultImg] = useState("");
+    const [autoApproveActive, setAutoApproveActive] = useState(false);
 
 
-    const itemsPerPage = 10; // Number of items to display per page
+    const itemsPerPage = 5; // Number of items to display per page
     const [currentPage, setCurrentPage] = useState(1);
     const token = localStorage.getItem('token');
 
@@ -35,8 +37,23 @@ export const GrettingRoom = ({ id = 'default-id', onClose}) => {
     useEffect(() => {
         if(id !== 'default-id'){
             onHandleGrettingMessageDetailByRoom(id);
+            onHandleDefaultImage();
         }   
     }, []);
+
+
+    const onHandleDefaultImage = () =>[
+        Axios.get("https://web-intractive-system-app-api.onrender.com/defaultImage/get", {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        .then(response => {
+            setDefaultImg(response.data["image"]);
+            // console.log("this is the default image value: ", response.data["image"]);
+        })
+        .catch(error => {
+            console.log("Get Room Setting Exception From Room Setting: ", error);
+        })
+    ];
 
 
     const onHandleGrettingMessageDetailByRoom = (id) => {
@@ -44,10 +61,6 @@ export const GrettingRoom = ({ id = 'default-id', onClose}) => {
         Axios.get("https://web-intractive-system-app-api.onrender.com/get/greetingMessageDetailByRoom/"+id, {}, {
         })
         .then(response => {
-            // console.log("this is the gretting room response: ", response.data);
-            // const pendingData = response.data.filter(item => item.message_status === 0);
-            // const approveData = response.data.filter(item => item.message_status === 1);
-            // const rejectData = response.data.filter(item => item.message_status === 2);
             setData(response.data);
             setRoomName(response.data[0].room_name);
         })
@@ -62,18 +75,28 @@ export const GrettingRoom = ({ id = 'default-id', onClose}) => {
     };
 
 
-    const handleRefresh = () => {
-        // Call the API again to refresh the data
-        onHandleGrettingMessageDetailByRoom(id);
+    const handleRemoveGreetingMessageById = (gretting_id, room_id) => {
+        Axios.post("https://web-intractive-system-app-api.onrender.com/delete/GreetingMessage", {
+            greeting_id : gretting_id,
+        }, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        .then(response => {
+            console.log(response);
+            onHandleGrettingMessageDetailByRoom(room_id);
+        })
+        .catch(error => {
+            console.log(error);
+        });
     };
 
 
     const handleGreetingMessageStatus = (status, statusId, roomId) =>{
         // setLoading(true);
-
+        
 
         if(status == 3){
-
+            setLoading(true);
             const messageIdsToApprove = data.map((item) => item.id);
             selectedMessageIds.push(...messageIdsToApprove);
 
@@ -87,6 +110,7 @@ export const GrettingRoom = ({ id = 'default-id', onClose}) => {
             //     onHandleGrettingMessageDetailByRoom(roomId);
             //     // console.log("this is the response: ", response);
             // //   window.parent.hideModal();
+                setLoading(false);
                 onHandleGrettingMessageDetailByRoom(roomId);
             })
             .catch(error => {
@@ -112,7 +136,10 @@ export const GrettingRoom = ({ id = 'default-id', onClose}) => {
         }
     };
 
-
+    const handleRefresh = () => {
+        // Call the API again to refresh the data
+        onHandleGrettingMessageDetailByRoom(id);
+    };
 
     return(
         <div>
@@ -135,7 +162,11 @@ export const GrettingRoom = ({ id = 'default-id', onClose}) => {
                     </button>
                 </div>
                 <div className="btn-group btn-group-toggle float-right" data-toggle="buttons" style={{ marginLeft: '395px' }}>
-                    <button id="autoApproveButton" className="btn btn-outline-dark" onClick={() => handleGreetingMessageStatus(3, 0, id)}>
+                    <button id="autoApproveButton"   className={`btn btn-outline-dark ${autoApproveActive ? 'active' : ''}`}
+                    onClick={() => {
+                        handleGreetingMessageStatus(3, 0, id); 
+                        setAutoApproveActive(true); // This should trigger your Auto Approve logic
+                      }}>
                         <i className="fa fa-check"></i><span>Auto Approve Greeting</span>
                     </button>
                     <button id="refreshButton" className="btn btn-outline-primary" onClick={() => handleRefresh(id)}>
@@ -144,42 +175,7 @@ export const GrettingRoom = ({ id = 'default-id', onClose}) => {
                 </div>
              </div>
             <hr />
-            <p>Room Name: {roomName}</p>
-            <hr />
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">No</th>
-                        <th scope="col">Sender</th>
-                        <th scope="col">Greeting Message</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {/* {data[messageStatus === 0 ? 'pending' : messageStatus === 1 ? 'approve' : 'reject'].map((item, index) => (
-                    
-                ))} */}
-                {data ? (
-                    data
-                    .filter((item) => messageStatus === null || item.message_status === messageStatus)
-                    .slice(startIndex, endIndex)
-                    .map((item, index) => (
-                        <tr key={index}>
-                    <td scope="row">{item.no}</td>
-                    <td>{item.sender_name}</td>
-                    <td>{item.content}</td>
-                    <td>
-                        <button type="button" className={`btn btn-outline-primary ${item.message_status === 0 || messageStatus === 0 ? 'active' : ''}`} style={{ marginRight: '5px' }} onClick={() => handleGreetingMessageStatus(0, item.id, id)} >Pending</button>
-                        <button type="button" className={`btn btn-outline-success ${item.message_status === 1  || messageStatus === 1 ? 'active' : ''}`} style={{ marginRight: '5px' }} onClick={() => handleGreetingMessageStatus(1, item.id, id)} >Approve</button>
-                        <button type="button" className={`btn btn-outline-danger ${item.message_status === 2  || messageStatus === 2 ? 'active' : ''}`} onClick={() => handleGreetingMessageStatus(2, item.id, id)} >Reject</button>
-                    </td>
-                    </tr>
-                    ))
-                    ) : (
-                    <p>Loading data...</p>
-                    )}
-                </tbody>
-            </table>
+            {/* <p>Room Name: {roomName}</p> */}
             <nav aria-label="Page navigation">
                 <ul className="pagination">
                     <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
@@ -212,6 +208,52 @@ export const GrettingRoom = ({ id = 'default-id', onClose}) => {
                     </li>
                 </ul>
             </nav>
+            <hr />
+            <table className="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">No</th>
+                        <th scope="col">Sender</th>
+                        <th scope="col">Greeting Message</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {/* {data[messageStatus === 0 ? 'pending' : messageStatus === 1 ? 'approve' : 'reject'].map((item, index) => (
+                    
+                ))} */}
+                {data ? (
+                    data
+                    .filter((item) => messageStatus === null || item.message_status === messageStatus)
+                    .slice(startIndex, endIndex)
+                    .map((item, index) => (
+                        <tr key={index}>
+                    <td scope="row">{item.no}</td>
+                    <td>{item.sender_name}</td>
+                    <td>{item.content}</td>
+                    <td>
+                        <img
+                        className="mode-image"
+                        id="wedding_image"
+                        height={120}
+                        src={item.sender_img || defaultImg}
+                        alt="image"
+                        />
+                    </td>
+                    <td>
+                        <button type="button" className={`btn btn-outline-primary ${item.message_status === 0 || messageStatus === 0 ? 'active' : ''}`} style={{ marginRight: '5px' }} onClick={() => handleGreetingMessageStatus(0, item.id, id)} >Pending</button>
+                        <button type="button" className={`btn btn-outline-success ${item.message_status === 1  || messageStatus === 1 ? 'active' : ''}`} style={{ marginRight: '5px' }} onClick={() => handleGreetingMessageStatus(1, item.id, id)} >Approve</button>
+                        <button type="button" className={`btn btn-outline-danger ${item.message_status === 2  || messageStatus === 2 ? 'active' : ''}`} style={{ marginRight: '5px' }} onClick={() => handleGreetingMessageStatus(2, item.id, id)} >Reject</button>
+                        <button type="button" className="btn btn-outline-warning" onClick={() => handleRemoveGreetingMessageById(item.id, id)} >Delete</button>
+                    </td>
+                    </tr>
+                    ))
+                    ) : (
+                    <p>Loading data...</p>
+                    )}
+                </tbody>
+            </table>
         </div>
         </div>
     )

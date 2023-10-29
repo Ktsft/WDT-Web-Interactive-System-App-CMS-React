@@ -2,6 +2,7 @@ import React , { useState } from 'react';
 import { Modal } from '../components/index';
 import TableRow from './tableRow';
 import { RoomSetting, GrettingRoom } from '../profile';
+import Axios from 'axios';
 
 
 export const Table = ({ data, onRefresh, showToast }) =>{
@@ -62,8 +63,17 @@ export const Table = ({ data, onRefresh, showToast }) =>{
 
 
     const handleRowSettingClick = (id) =>{
+
         // console.log("this is handle row setting click: ", id);
-        toggleModal(<GrettingRoom id={id} onClose={onCloseModal}/> , '1200px', '1500px', 'Greeting List');
+        Axios.get("https://web-intractive-system-app-api.onrender.com/get/roomName/"+id, {}, {
+        })
+        .then(response => {
+            let roomNameValue = response.data[0].room_name;
+            toggleModal(<GrettingRoom id={id} onClose={onCloseModal}/> , '1400px', '1500px', '[Greeting Page] Room name: ' + roomNameValue);
+        })
+        .catch(error => {
+            console.log(error);
+        });
     };
 
 
