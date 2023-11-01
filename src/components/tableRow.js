@@ -192,7 +192,7 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClic
       <td>Wedding room</td>
       <td>{item.remaining_time || '0:0:0.000000'}</td>
       <td>
-      {roomStatus === 0 ? (
+      {item.roomStatus === 0 ? (
           <div className="form-check form-switch">
             <input
               type="checkbox"

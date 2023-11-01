@@ -78,10 +78,13 @@
                     // If remainingTimes is NaN or negative, set it to "24:00:00"
                     remainingTimes = '24:00:00';
                   }
-
+                
+                const isActive = remainingTimes !== '24:00:00';
+                  
                 return {
                     ...item,
-                    remaining_time: remainingTimes
+                    remaining_time: remainingTimes,
+                    roomStatus: isActive ? 1 : 0, // Set roomStatus to 1 if active, 0 if not
                   };
                 });
                 return updatedRoom;
