@@ -189,6 +189,7 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClic
     <tr>
       <th scope="row">{item.id}</th>
       <td>{item.room_name}</td>
+      <td>Wedding room</td>
       <td>{item.remaining_time || '0:0:0.000000'}</td>
       <td>
       {roomStatus === 0 ? (
