@@ -3,6 +3,7 @@ import { Button, Modal } from '../components/index';
 // import jwt_decode from 'jsonwebtoken';
 import '../styles/app.css';
 import DatePicker from 'react-datepicker';
+import moment from 'moment';
 
 import Axios from 'axios'; // Import Axios
 // import { Modal } from 'bootstrap';
@@ -34,6 +35,7 @@ export const CreateRoom = (props) => {
         onHandleDefaultGreeting();
     }, []);
 
+    
 
     const onHandleRestrictedWord = () => {
         Axios.get("https://web-intractive-system-app-api.onrender.com/get/defaultRestrictWord")
@@ -71,6 +73,13 @@ export const CreateRoom = (props) => {
 
     const onHandleCreateRoom = () => { 
 
+        // console.log("start datetime: ", startDate);
+        // console.log("end date: ", endDate);
+
+        const outputFormat = "MM/DD/YYYY HH:mm:ss";
+        const formattedStartDate = moment(startDate, "ddd MMM DD YYYY HH:mm:ss").format(outputFormat);
+        const formattedEndDate = moment(endDate, "ddd MMM DD YYYY HH:mm:ss").format(outputFormat);
+
         const restrictedWordArray = restrictedWord.split('\n');
         const defaultGreetingArray = defaultGreeting.split('\n');
 
@@ -94,8 +103,8 @@ export const CreateRoom = (props) => {
             gameMode : 0,
             themeIndex : 0,
             layoutDirection : 0,
-            startDate: startDate,
-            endDate: endDate,
+            startDate: formattedStartDate,
+            endDate: formattedEndDate,
           }, {
             headers: { Authorization: `Bearer ${token}` }
           })
@@ -133,6 +142,20 @@ export const CreateRoom = (props) => {
         setRoomDescription(e.target.value);
     };
 
+    const onHandleStartDasteSelecteds = (e) => {
+        
+        setStartDate(e);
+        
+        if(e){
+           const newEndDate = new Date(e);
+           newEndDate.setHours(newEndDate.getHours() + 24);
+           setEndDate(newEndDate);
+        }
+    };
+
+    const onHandleEndDateSelecteds = (e) => {
+        setEndDate(e);
+    };
 
     return (
         <div className="container">
@@ -158,8 +181,8 @@ export const CreateRoom = (props) => {
                             <DatePicker
                                      // Set the width to 100%
                                     className="form-control custom-datepicker-width-create-room" // Apply the custom-datepicker class here
-                                    selected={isActiveChecked ? new Date() : startDate} // Conditionally set to new Date()
-                                    onChange={(date) => setStartDate(date)}
+                                    selected={isActiveChecked ? startDate : new Date()} // Conditionally set to new Date()
+                                    onChange={(date) => onHandleStartDasteSelecteds(date)}
                                     showTimeSelect
                                     timeFormat="HH:mm"
                                     timeIntervals={15}
@@ -175,14 +198,14 @@ export const CreateRoom = (props) => {
                         <td style={{ padding: '10px' }}>
                             <DatePicker
                                 className="form-control custom-datepicker-width-create-room"
-                                selected={isActiveChecked ? new Date() : endDate} // Conditionally set to new Date()
-                                onChange={(date) => setEndDate(date)}
+                                selected={isActiveChecked ? endDate : new Date() } // Conditionally set to new Date()
+                                onChange={(date) => onHandleEndDateSelecteds(date)}
                                 showTimeSelect
                                 timeFormat="HH:mm"
                                 timeIntervals={15}
                                 timeCaption="Time"
                                 dateFormat="MMMM d, yyyy h:mm aa"
-                                disabled={!isActiveChecked}
+                                disabled
                                 minDate={isActiveChecked ? new Date() : null} // Set minDate conditionally 
                                 
                             />

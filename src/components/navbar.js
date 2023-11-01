@@ -90,7 +90,7 @@ export const Navbar = ({ username, onRefresh, isRoles }) => {
                         <li className="nav-item active">
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                             <CreateIcon style={{ marginRight: '1px' }} />
-                            <a className="nav-link" href="#" onClick={() => toggleModal(<CreateRoom onCloseModal={onCloseModal} onCloseModals={onCloseModals} />,'700px','1500px', 'Create Room')} >
+                            <a className="nav-link" href="#" onClick={() => toggleModal(<CreateRoom onCloseModal={onCloseModal} onCloseModals={onCloseModals} />,'790px','1500px', 'Create Room')} >
                                 Create Room <span className="sr-only"></span>
                             </a>
                             </div>

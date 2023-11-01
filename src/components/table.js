@@ -85,6 +85,7 @@ export const Table = ({ data, onRefresh, showToast }) =>{
                     <tr>
                         <th scope="col">Room ID</th>
                         <th scope="col">Room Name</th>
+                        <th scope="col">Room Type</th>
                         <th scope="col">Remaining Time</th>
                         <th scope="col">Active</th>
                         <th scope="col">Action</th>

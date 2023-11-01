@@ -1,6 +1,7 @@
-import React , { useState } from 'react';
+import React , { useState, useEffect } from 'react';
 import { GearIcon, BookIcon, TrashIcon, QrCodeIcon } from '../assets/icon';
 import { ActiveRoom } from "../profile/index";
+import moment from 'moment';
 
 import Axios from 'axios';
 
@@ -14,17 +15,68 @@ function secondsToHHMMSS(seconds) {
 };
 
 
-
+// function calculateRemainingTimes(items) {
+//   const now = Math.floor(Date.now() / 1000);
+  
+//   if(Array.isArray(items)){
+//     return items.map(item => {
+//       console.log("momejt(item.end_dates)", moment(item.end_dates).toDate());
+//       console.log("roomname ", item.room_name);
+//       const remaining = moment(item.end_dates).toDate() - now;
+//       return {
+//         remainingTime: remaining >= 0 ? secondsToHHMMSS(remaining) : '0:0:0.000000',
+//       };
+//     });
+//   }else{
+//     const updatedItems = {};
+//     for (const key in items) {
+//       const item = items[key];
+      
+//       if (item.end_dates !== null && item.end_dates !== undefined) {
+//         const remaining = moment(item.end_dates).toDate() - now;
+//         updatedItems[key] = {
+  
+//           remainingTime: remaining >= 0 ? secondsToHHMMSS(remaining) : '0:0:0.000000',
+//         };
+//       } else {
+//         const updatedItems = {};
+//         for (const key in items) {
+//           const item = items[key];
+//           const endDates = item?.end_dates || null; // Optional chaining with null fallback
+//           const remaining = endDates ? moment(endDates).toDate() - now : 0;
+          
+//           updatedItems[key] = {
+//             remainingTime: remaining >= 0 ? secondsToHHMMSS(remaining) : '0:0:0.000000',
+//           };
+//         }
+//         return updatedItems;
+//       }
+//     }
+//   }
+    
+// }
 
 function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClickSetting }) {
-
-  const remainingDuration = secondsToHHMMSS(item.end_date - Math.floor(Date.now() / 1000));
+  // const [remainingTime, setRemainingTime] = useState(calculateRemainingTimes(item));
   
   const [roomStatus, setRoomStatus] = useState(item.room_status);
   const itemsPerPage = 10; // Adjust as needed
 
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
   
+  // useEffect(() => {
+  //   // Create an interval to update the remaining times every 1000 seconds
+  //   const interval = setInterval(() => {
+  //     setRemainingTime(currentRemainingTimes => {
+  //       return calculateRemainingTimes(currentRemainingTimes);
+  //     });
+  //   }, 1000);
+
+  //   // Clean up the interval when the component unmounts
+  //   return () => {
+  //     clearInterval(interval);
+  //   };
+  // }, []);
 
   const onCloseModals = () => {
       // console.log("this is the on close modal pressed");
@@ -132,6 +184,7 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClic
     document.body.removeChild(a);	
   };
 
+  
   return (
     <tr>
       <th scope="row">{item.id}</th>

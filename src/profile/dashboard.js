@@ -1,7 +1,8 @@
     import React, { useState, useEffect } from 'react';
     import { Loading, Table, Navbar, Toast, SuperAdminTable } from '../components/index';
     import { useUser } from './userProvider'; // Import useUser from the context
-    
+    import moment from 'moment';
+
 
     import Axios from 'axios'; // Import Axios
 
@@ -34,6 +35,64 @@
             }
           }, [token, user]); // This effect runs only once when the component mounts          
 
+
+          useEffect(() => {
+            const interval = setInterval(() => {
+              setRoom((prevRoom) => {
+                const updatedRoom = prevRoom.map((item) => {
+
+                    const endDatetime = moment(item.end_dates).toDate();
+                    
+                    //============================
+                    const now = moment();
+                    const remainingSecondss = moment(endDatetime).diff(now, 'seconds');
+                    // console.log("========================================");
+                    // console.log("end datetime: ", endDatetime);
+                    // console.log("remaining seconds: ", remainingSecondss);
+                    const hours = Math.floor(remainingSecondss / 3600);
+                    // console.log("remaining seconds: ", hours);
+                    const minutes = Math.floor((remainingSecondss % 3600) / 60);
+                    // console.log("remaining seconds: ", minutes);
+                    const seconds = remainingSecondss % 60;
+                    // console.log("remaining seconds: ", seconds);
+
+                    var remainingTimes = `${hours}:${minutes}:${seconds}`;
+                    // console.log("remaining times: ", remainingTimes);
+                    // console.log("room name: ", item.room_name);
+                    // console.log("========================================");
+                //   if (remainingTimes < 0) {
+                //     // If remainingSeconds is negative (in the past), set it to "24:00:00"
+                //     return {
+                //       ...item,
+                //       remaining_time: '24:00:00',
+                //     };
+                //   } else {
+                //     // If remainingSeconds is positive (in the future), format it as HH:MM:SS
+                //     return {
+                //       ...item,
+                //       remaining_time: remainingTimes
+                //     };
+                //   }
+
+                if (remainingTimes === 'NaN:NaN:NaN' || remainingSecondss < 0) {
+                    // If remainingTimes is NaN or negative, set it to "24:00:00"
+                    remainingTimes = '24:00:00';
+                  }
+
+                return {
+                    ...item,
+                    remaining_time: remainingTimes
+                  };
+                });
+                return updatedRoom;
+              });
+            }, 1000);
+          
+            return () => {
+              clearInterval(interval);
+            };
+          }, []);
+          
 
         if (token) {
             // Token exists in localStorage

@@ -75,10 +75,14 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
                         setStartDate(null);
                         setEndDate(null);
                     } else if(response.data["start_date"] != null && response.data["end_dates"] != null) {
+
                         const startDateValue = moment(response.data["start_date"]).toDate();
                         setStartDate(startDateValue);
-                    
-                        const endDateValue = new Date(response.data["end_dates"]);
+                        // const startDateValue = "11/01/2023 12:45:00";
+                        // const check = moment(startDateValue).toDate();
+                        // setStartDate(check);
+                        
+                        const endDateValue = moment(response.data["end_dates"]).toDate();
                         setEndDate(endDateValue);
                     }
 
