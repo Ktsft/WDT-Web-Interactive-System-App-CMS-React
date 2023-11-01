@@ -42,7 +42,8 @@
                 const updatedRoom = prevRoom.map((item) => {
 
                     const endDatetime = moment(item.end_dates).toDate();
-                    
+                    const formattedEndDatetime = moment(item.end_dates).format('DD/MM/YYYY HH:mm:ss a');
+                    const formattedStartDatetime = moment(item.start_date).format('DD/MM/YYYY HH:mm:ss a');
                     //============================
                     const now = moment();
                     const remainingSecondss = moment(endDatetime).diff(now, 'seconds');
@@ -85,6 +86,8 @@
                     ...item,
                     remaining_time: remainingTimes,
                     roomStatus: isActive ? 1 : 0, // Set roomStatus to 1 if active, 0 if not
+                    local_format_start_date: formattedStartDatetime,
+                    local_format_end_date: formattedEndDatetime
                   };
                 });
                 return updatedRoom;

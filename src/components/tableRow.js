@@ -191,31 +191,24 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClic
       <td>{item.room_name}</td>
       <td>Wedding room</td>
       <td>{item.remaining_time || '0:0:0.000000'}</td>
+      <td style={{width: '270px'}}>
+        {item.local_format_start_date !== 'Invalid date' && item.local_format_end_date !== 'Invalid date' ? 
+          `${item.local_format_start_date} - ${item.local_format_end_date}` :
+          'NA'
+        }
+        </td>
       <td>
-      {item.roomStatus === 0 ? (
-          <div className="form-check form-switch">
+         <div className="form-check form-switch">
             <input
               type="checkbox"
               className="form-check-input"
               role="switch"
               onChange={() => toggleRoomStatus(item.id)}
+              checked={item.roomStatus}
               id={`switch_${item.id}`}
             />
             <label className="custom-control-label" htmlFor={`switch_${item.id}`}></label>
           </div>
-        ) : (
-          <div className="form-check form-switch">
-            <input
-              type="checkbox"
-              className="form-check-input"
-              role="switch"
-              onChange={() => toggleRoomStatus(item.id)}
-              checked
-              id={`switch_${item.id}`}
-            />
-            <label className="custom-control-label" htmlFor={`switch_${item.id}`}></label>
-          </div>
-        )}
       </td>
       <td>
         <button className="btn btn-outline-secondary" id={`gearButton_${item.id}`} onClick={() => onRowClick(item.id)}>
