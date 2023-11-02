@@ -79,6 +79,8 @@ export const CreateRoom = (props) => {
         const outputFormat = "MM/DD/YYYY HH:mm:ss";
         const formattedStartDate = moment(startDate, "ddd MMM DD YYYY HH:mm:ss").format(outputFormat);
         const formattedEndDate = moment(endDate, "ddd MMM DD YYYY HH:mm:ss").format(outputFormat);
+        console.log("start date: ", startDate);
+        console.log("formattedStartDate: ", formattedStartDate);
         console.log("end date: ", endDate);
         console.log("formattedEndDate: ", formattedEndDate);
 
