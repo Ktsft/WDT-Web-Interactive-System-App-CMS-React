@@ -162,7 +162,7 @@ export const CreateRoom = (props) => {
         <table className="user-table">
             <tbody>
                 <tr>
-                    <th className="user-table-label-cell" style={{ padding: '10px' }}>Active mode: </th>
+                    <th className="create-room-table-label-cell" style={{ padding: '10px' }}>Auto active mode: </th>
                     <td style={{ padding: '29px' }}>
                     <div className="form-check form-switch custom-switch-input">
                         <input

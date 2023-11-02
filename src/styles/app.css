@@ -51,6 +51,14 @@ body{
     border: none; /* Remove borders */
 }
 
+.create-room-table-label-cell{
+    width: 40%; 
+}
+
+.create-room-table-input-cell{
+    width:60%; 
+}
+
 
 .user-table-label-cell{
     width: 20%; 

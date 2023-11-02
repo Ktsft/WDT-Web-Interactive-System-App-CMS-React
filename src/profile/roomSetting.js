@@ -33,7 +33,8 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
 
     const [startDate, setStartDate] = useState(null);  // Initialize with the current date and time
     const [endDate, setEndDate] = useState(null);  // Initialize with the current date and time
-    
+    const [isActiveChecked, setIsActiveChecked] = useState(false);
+
 
     useEffect(() => {
         // console.log("this is the id from modal: ", id);
@@ -333,6 +334,20 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
         <div className="container">
             <table className="user-table" >
                 <tbody>
+                <tr>
+                    <th className="create-room-table-label-cell" style={{ padding: '10px' }}>Auto active mode: </th>
+                    <td style={{ padding: '29px' }}>
+                    <div className="form-check form-switch custom-switch-input">
+                        <input
+                            type="checkbox"
+                            className="form-check-input"
+                            role="switch"
+                            checked={isActiveChecked}
+                            onChange={() => setIsActiveChecked(!isActiveChecked)}
+                        />
+                    </div>
+                    </td>
+                </tr>
                     <tr>
                         <th className="user-table-label-cell" style={{ padding: '10px' }}>Start Date: </th>
                         <td style={{ padding: '10px' }}>
@@ -347,7 +362,7 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
                                     timeCaption="Time"
                                     dateFormat="MMMM d, yyyy h:mm aa"
                                     minDate={new Date()} // Disable past dates
-                                    />
+                            />
                         </td>
                     </tr>
                     <tr>
