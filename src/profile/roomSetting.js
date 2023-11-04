@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from '../components/index';
+import { Button, Modal } from '../components/index';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'; // Import the styles
 import Axios from 'axios';
 import moment from 'moment';
 import '../styles/app.css';
+import dateFormat from 'dateformat';
+
 
 export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToast }) => {
 
@@ -28,7 +30,10 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
     const [restrictedWord, setRestrictedWord] = useState('');
     const [defaultGreeting, setDefaultGreeting] = useState('');
 
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [title, setTitle] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [modalContent, setModalContent] = useState('');
+
 
 
     const [startDate, setStartDate] = useState(null);  // Initialize with the current date and time
@@ -79,9 +84,6 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
 
                         const startDateValue = moment(response.data["start_date"]).toDate();
                         setStartDate(startDateValue);
-                        // const startDateValue = "11/01/2023 12:45:00";
-                        // const check = moment(startDateValue).toDate();
-                        // setStartDate(check);
                         
                         const endDateValue = moment(response.data["end_dates"]).toDate();
                         setEndDate(endDateValue);
@@ -235,62 +237,83 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
     };
 
 
+    const onHandleCloseSuccessModal = () => {
+        setShowModal(false);
+    };
+
+    const handleModalConfirmation = () => {
+        setShowModal(false);
+    };
+
+
     const updateRoomSetting = () => {
 
-        const restrictedWordArray = restrictedWord.split('\n');
-        const defaultGreetingArray = defaultGreeting.split('\n');
+        const timeDifference = endDate - startDate;
+        console.log("timeDifference: ", timeDifference);
+        const timeDifferenceInHours = timeDifference / (1000 * 60 * 60);
+        console.log("timeDifferenceInHours: ", timeDifferenceInHours);
 
-        // Replace single quotes with 'u0027' in each element of the array
-        const restrictedWordModified = restrictedWordArray.map((word) => word.replace(/'/g, 'u0027'));
-        const defaultGreetingModified = defaultGreetingArray.map((greeting) => greeting.replace(/'/g, 'u0027'));
+        if (timeDifferenceInHours > 24) {
+            setShowModal(true);
+            setTitle("Warning");
+            setModalContent("Not allowed to create room; time difference is over 24 hours!");
+            return;
+        }else{
+        
+            const restrictedWordArray = restrictedWord.split('\n');
+            const defaultGreetingArray = defaultGreeting.split('\n');
 
-        // Combine the modified array elements back into a single string with '|'
-        const restrictedWordFinal = restrictedWordModified.join('|');
-        const defaultGreetingFinal = defaultGreetingModified.join('|');
+            // Replace single quotes with 'u0027' in each element of the array
+            const restrictedWordModified = restrictedWordArray.map((word) => word.replace(/'/g, 'u0027'));
+            const defaultGreetingModified = defaultGreetingArray.map((greeting) => greeting.replace(/'/g, 'u0027'));
 
-        Axios.post("https://web-intractive-system-app-api.onrender.com/room/update/"+id, {
-            roomName : roomName,
-            roomDescription : roomDesc,
-            gameMode: gameMode,
-            themeIndex: themeIndex,
-            layoutDirection: layoutDirection,
-            restrictedWord : restrictedWordFinal,
-            defaultGreeting : defaultGreetingFinal,
-            startDate: startDate,
-            endDate: endDate
-        },{
-            headers: { Authorization: `Bearer ${token}` }
-        })
-        .then(response => {
+            // Combine the modified array elements back into a single string with '|'
+            const restrictedWordFinal = restrictedWordModified.join('|');
+            const defaultGreetingFinal = defaultGreetingModified.join('|');
 
-            console.log("update room successfully");
-            Axios.post("https://web-intractive-system-app-api.onrender.com/roomSetting/update/"+id, {
-                backgroundImg :backgroundImg,
-                appLogoImg : appLogoImg,
-                coverPhotoImg: coverPhotoImg,
-                welcomeTextColor: welcomeTextColor,
-                nameIconColor : nameIconColor,
-                dropdownHighlightColor: dropdownHighlightColor,
-                greetingScrollBackgroundColor: greetingScrollBackgroundColor,
-                submitButton : submitButtonImg
+            Axios.post("https://web-intractive-system-app-api.onrender.com/room/update/"+id, {
+                roomName : roomName,
+                roomDescription : roomDesc,
+                gameMode: gameMode,
+                themeIndex: themeIndex,
+                layoutDirection: layoutDirection,
+                restrictedWord : restrictedWordFinal,
+                defaultGreeting : defaultGreetingFinal,
+                startDate: startDate,
+                endDate: endDate
             },{
                 headers: { Authorization: `Bearer ${token}` }
-            }).then(response2 => {
-                console.log("update room setting successful");
-                // setShowSuccessModal(true);
-                showToast('Update room successfully', 'success', 'Successful');
-                onCloseModals(); 
             })
-            .catch(error2 => {
-                console.log("Error exception on update room setting: ", error2);
+            .then(response => {
+
+                console.log("update room successfully");
+                Axios.post("https://web-intractive-system-app-api.onrender.com/roomSetting/update/"+id, {
+                    backgroundImg :backgroundImg,
+                    appLogoImg : appLogoImg,
+                    coverPhotoImg: coverPhotoImg,
+                    welcomeTextColor: welcomeTextColor,
+                    nameIconColor : nameIconColor,
+                    dropdownHighlightColor: dropdownHighlightColor,
+                    greetingScrollBackgroundColor: greetingScrollBackgroundColor,
+                    submitButton : submitButtonImg
+                },{
+                    headers: { Authorization: `Bearer ${token}` }
+                }).then(response2 => {
+                    console.log("update room setting successful");
+                    // setShowSuccessModal(true);
+                    showToast('Update room successfully', 'success', 'Successful');
+                    onCloseModals(); 
+                })
+                .catch(error2 => {
+                    console.log("Error exception on update room setting: ", error2);
+                })
             })
-        })
-        .catch(error => {
-            console.log("Error exception on update room: ", error);
-        })
+            .catch(error => {
+                console.log("Error exception on update room: ", error);
+            })
+    }
 
-
-    };
+};
 
 
 
@@ -359,6 +382,7 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
                                     showTimeSelect
                                     timeFormat="HH:mm"
                                     timeIntervals={15}
+                                    disabled={!isActiveChecked} 
                                     timeCaption="Time"
                                     dateFormat="MMMM d, yyyy h:mm aa"
                                     minDate={new Date()} // Disable past dates
@@ -377,7 +401,7 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
                                 timeIntervals={15}
                                 timeCaption="Time"
                                 dateFormat="MMMM d, yyyy h:mm aa"
-                                disabled
+                                disabled={!isActiveChecked} 
                                 minDate={new Date()} // Disable past dates
                                 />
                         </td>
@@ -669,6 +693,22 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
                 <Button type="button" classType="btn btn-danger"  text="Discard" buttonWidth="20%" onClick={onClose} />
                 <Button type="button" classType="btn btn-primary"  text="Save" buttonWidth="20%"  onClick={updateRoomSetting} />
             </div>
+
+
+            {showModal && (
+            <>
+                <Modal 
+                    show={showModal}
+                    onHide={() => onHandleCloseSuccessModal()}
+                    title = {title}
+                    content={modalContent}
+                    width="400px"
+                    height="200px"
+                    confirmationCallback={handleModalConfirmation} 
+                />
+            </>
+        )} 
+
         </div>
     )
 }

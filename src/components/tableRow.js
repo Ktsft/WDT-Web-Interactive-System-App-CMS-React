@@ -56,14 +56,17 @@ function secondsToHHMMSS(seconds) {
     
 // }
 
-function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClickSetting }) {
+function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClickSetting, onSwitchClickSetting }) {
   // const [remainingTime, setRemainingTime] = useState(calculateRemainingTimes(item));
   
   const [roomStatus, setRoomStatus] = useState(item.room_status);
   const itemsPerPage = 10; // Adjust as needed
 
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
-  
+  const [modalContent, setModalContent] = useState(''); // Content for the modal
+  const [modalTitle, setModalTitle] = useState(''); // Title for the modal
+  const [modalWidth, setModalWidth] = useState(''); // Width for the modal
+  const [modalHeight, setModalHeight] = useState(''); // Height for the modal
   // useEffect(() => {
   //   // Create an interval to update the remaining times every 1000 seconds
   //   const interval = setInterval(() => {
@@ -80,7 +83,10 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClic
 
   const onCloseModals = () => {
       // console.log("this is the on close modal pressed");
+      // onRefresh(true);
       setIsModalOpen(false);
+
+      console.log("check");
   };
 
   const token = localStorage.getItem('token');
@@ -103,9 +109,53 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClic
   // }, [item.end_date, item.id]);
 
 
-
-  const toggleRoomStatus = (roomId) => {
+  const toggleModal = (content, width, height, title) => {
     
+    setModalContent(content);
+    setModalWidth(width);
+    setModalHeight(height);
+    setIsModalOpen(true);
+    setModalTitle(title);
+};
+
+
+
+  // const toggleRoomStatus = (roomId, status) => {
+  //   // console.log("status", status);
+  //   // console.log("id: ", roomId);
+
+
+  //   if(status == 1){
+
+      // // const currentDate = new Date();
+      // // console.log("current date: ", currentDate);
+      // const currentDate = new Date();
+      // // const endDaateValue = moment(currentDate).toDate();
+      // // const formattedEndDatetime = moment(endDaateValue).format("MMMM d, yyyy h:mm aa");
+      // // console.log("formattedEndDatetime: ", formattedEndDatetime);
+      // Axios.post("https://web-intractive-system-app-api.onrender.com/room/datetime/update/"+roomId, {
+      //               endDate : currentDate
+      // },{
+      //   headers: { Authorization: `Bearer ${token}` }
+      // }).then(response2 => {
+      //         console.log("update room setting successful");
+      //       // // setShowSuccessModal(true);
+      //       // showToast('Update room successfully', 'success', 'Successful');
+      //       // onCloseModals(); 
+      //       onRefresh();
+      //   })
+      //   .catch(error2 => {
+      //       console.log("Error exception on update room setting: ", error2);
+      //   })      
+
+  //   }else if(status == 0){
+  //     toggleModal(<ActiveRoom id={roomId} onClose={onCloseModal} onRefresh={onRefresh}/>, '900px', '500px', 'Active DateTime Option')
+  //     //toggleModal(<ActiveRoom onClose={onCloseModal} onRefresh={onRefresh} roomId={roomId}/>, '900px','500px', 'Active DateTime Option');
+  //   }
+
+
+
+
     // // Send a request to toggle the room status
     //   Axios.post(`/room/toggle/${roomId}`, {}, {
     //     headers: { Authorization: `Bearer ${token}` },
@@ -118,8 +168,8 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClic
     //     console.error(`Error toggling room ${roomId} status:`, error);
     //   });
 
-      openModal(<ActiveRoom onCloseModals={onCloseModals} />, '700px','3000px', 'Active DateTime Option');
-  };
+      //openModal(<ActiveRoom onCloseModals={onCloseModals} />, '700px','3000px', 'Active DateTime Option');
+  // };
 
 
 
@@ -155,13 +205,6 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClic
 };
 
 
-  // const toggleModal = (content, width, height, title) => {
-  //     setModalContent(content);
-  //     setModalWidth(width);
-  //     setModalHeight(height);
-  //     setIsModalOpen(true);
-  //     setModalTitle(title);
-  // };
 
 
   const downloadQRCode = (qrCodeBase64) => {	
@@ -192,7 +235,7 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClic
       <td>Wedding room</td>
       <td>{item.remaining_time || '0:0:0.000000'}</td>
       <td style={{width: '270px'}}>
-        {item.local_format_start_date !== 'Invalid date' && item.local_format_end_date !== 'Invalid date' ? 
+        {item.start_date !== 'Invalid date' && item.local_format_end_date !== 'Invalid date' ? 
           `${item.local_format_start_date} - ${item.local_format_end_date}` :
           'NA'
         }
@@ -203,7 +246,7 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClic
               type="checkbox"
               className="form-check-input"
               role="switch"
-              onChange={() => toggleRoomStatus(item.id)}
+              onChange={() => onSwitchClickSetting(item.id, item.roomStatus)}
               checked={item.roomStatus}
               id={`switch_${item.id}`}
             />

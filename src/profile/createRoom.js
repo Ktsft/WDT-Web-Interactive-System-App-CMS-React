@@ -22,6 +22,7 @@ export const CreateRoom = (props) => {
     const [showModal, setShowModal] = useState(false);
     const [modalContent, setModalContent] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [title, setTitle] = useState('');
 
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     // const [startDate, setStartDate] = useState(() => new Date()); // Initialize with the current date and time
@@ -73,63 +74,68 @@ export const CreateRoom = (props) => {
 
     const onHandleCreateRoom = () => { 
 
-        // console.log("start datetime: ", startDate);
-        // console.log("end date: ", endDate);
-
-        const outputFormat = "MM/DD/YYYY HH:mm:ss";
-        const formattedStartDate = moment(startDate, "ddd MMM DD YYYY HH:mm:ss").format(outputFormat);
-        const formattedEndDate = moment(endDate, "ddd MMM DD YYYY HH:mm:ss").format(outputFormat);
-        console.log("start date: ", startDate);
-        console.log("formattedStartDate: ", formattedStartDate);
+        console.log("start datetime: ", startDate);
         console.log("end date: ", endDate);
-        console.log("formattedEndDate: ", formattedEndDate);
+        const timeDifference = endDate - startDate;
+        console.log("timeDifference: ", timeDifference);
+        const timeDifferenceInHours = timeDifference / (1000 * 60 * 60);
+        console.log("timeDifferenceInHours: ", timeDifferenceInHours);
 
-        const restrictedWordArray = restrictedWord.split('\n');
-        const defaultGreetingArray = defaultGreeting.split('\n');
+        if(timeDifferenceInHours > 24){
+            // console.log("Not allowed to create room; time difference is over 24 hours");
+            setShowModal(true);
+            setTitle("Warning");
+            setModalContent("Not allowed to create room; time difference is over 24 hours!");
+            return false;
+        }else{
 
-        // Replace single quotes with 'u0027' in each element of the array
-        const restrictedWordModified = restrictedWordArray.map((word) => word.replace(/'/g, 'u0027'));
-        const defaultGreetingModified = defaultGreetingArray.map((greeting) => greeting.replace(/'/g, 'u0027'));
+            const outputFormat = "MM/DD/YYYY HH:mm:ss";
+            const formattedStartDate = moment(startDate, "ddd MMM DD YYYY HH:mm:ss").format(outputFormat);
+            const formattedEndDate = moment(endDate, "ddd MMM DD YYYY HH:mm:ss").format(outputFormat);
+        
 
-        // Combine the modified array elements back into a single string with '|'
-        const restrictedWordFinal = restrictedWordModified.join('|');
-        const defaultGreetingFinal = defaultGreetingModified.join('|');
+            const restrictedWordArray = restrictedWord.split('\n');
+            const defaultGreetingArray = defaultGreeting.split('\n');
 
-        Axios.post("https://web-intractive-system-app-api.onrender.com/room/create", {
-            roomName : roomName,
-            roomDescription : roomDescription,
-            remainingDuration :0,
-            ownerId : userId,
-            roomMode : 0,
-            roomStatus : 0,
-            restrictedWord : restrictedWordFinal,
-            defaultGreeting : defaultGreetingFinal,
-            gameMode : 0,
-            themeIndex : 0,
-            layoutDirection : 0,
-            startDate: formattedStartDate,
-            endDate: formattedEndDate,
-          }, {
-            headers: { Authorization: `Bearer ${token}` }
-          })
-          .then(response => {
-            console.log("room created");
-            // showCreateRoomModal("Create Room Successfully");
-            setShowSuccessModal(true);
-            // window.parent.hideModal();
-            props.onCloseModal(); 
+            // Replace single quotes with 'u0027' in each element of the array
+            const restrictedWordModified = restrictedWordArray.map((word) => word.replace(/'/g, 'u0027'));
+            const defaultGreetingModified = defaultGreetingArray.map((greeting) => greeting.replace(/'/g, 'u0027'));
 
-          })
-          .catch(error => {
-              console.log(error);
-          });
+            // Combine the modified array elements back into a single string with '|'
+            const restrictedWordFinal = restrictedWordModified.join('|');
+            const defaultGreetingFinal = defaultGreetingModified.join('|');
+
+            Axios.post("https://web-intractive-system-app-api.onrender.com/room/create", {
+                roomName : roomName,
+                roomDescription : roomDescription,
+                remainingDuration :0,
+                ownerId : userId,
+                roomMode : 0,
+                roomStatus : 0,
+                restrictedWord : restrictedWordFinal,
+                defaultGreeting : defaultGreetingFinal,
+                gameMode : 0,
+                themeIndex : 0,
+                layoutDirection : 0,
+                startDate: startDate,
+                endDate: endDate,
+            }, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+            .then(response => {
+                console.log("room created");
+                // showCreateRoomModal("Create Room Successfully");
+                setShowSuccessModal(true);
+                // window.parent.hideModal();
+                props.onCloseModal(); 
+
+            })
+            .catch(error => {
+                console.log(error);
+            });
+            }
     };
 
-
-    const showCreateRoomModal = (message) => {
-        setModalContent(message);
-        setShowModal(true);
-    };
 
 
     const onHandleCloseSuccessModal = () => {
@@ -161,6 +167,14 @@ export const CreateRoom = (props) => {
         setEndDate(e);
     };
 
+    
+    const handleModalConfirmation = () => {
+        setShowModal(false);
+    };
+
+    
+
+
     return (
         <div className="container">
         <table className="user-table">
@@ -179,7 +193,7 @@ export const CreateRoom = (props) => {
                     </div>
                     </td>
                 </tr>
-            <tr>
+                <tr>
                         <th className="user-table-label-cell" style={{ padding: '10px' }}>Start Date: </th>
                         <td style={{ padding: '10px' }}>
                             <DatePicker
@@ -209,7 +223,7 @@ export const CreateRoom = (props) => {
                                 timeIntervals={15}
                                 timeCaption="Time"
                                 dateFormat="MMMM d, yyyy h:mm aa"
-                                disabled
+                                disabled={!isActiveChecked} 
                                 minDate={isActiveChecked ? new Date() : null} // Set minDate conditionally 
                                 
                             />
@@ -240,18 +254,19 @@ export const CreateRoom = (props) => {
         </div>
     
     
-        {/* {showModal && (
+        {showModal && (
             <>
                 <Modal 
                     show={showModal}
                     onHide={() => onHandleCloseSuccessModal()}
-                    title = "Success"
+                    title = {title}
                     content={modalContent}
                     width="400px"
                     height="200px"
+                    confirmationCallback={handleModalConfirmation} 
                 />
             </>
-        )}  */}
+        )} 
 
        
     </div>

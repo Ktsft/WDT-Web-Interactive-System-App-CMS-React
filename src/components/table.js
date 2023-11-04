@@ -1,8 +1,11 @@
 import React , { useState } from 'react';
 import { Modal } from '../components/index';
 import TableRow from './tableRow';
-import { RoomSetting, GrettingRoom } from '../profile';
+import { RoomSetting, GrettingRoom, ActiveRoom } from '../profile';
 import Axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+
 
 
 export const Table = ({ data, onRefresh, showToast }) =>{
@@ -10,6 +13,7 @@ export const Table = ({ data, onRefresh, showToast }) =>{
 
     const itemsPerPage = 10; // Number of items to display per page
     const [currentPage, setCurrentPage] = useState(1);
+    const token = localStorage.getItem('token');
 
     const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
     const [modalContent, setModalContent] = useState(''); // Content for the modal
@@ -54,6 +58,18 @@ export const Table = ({ data, onRefresh, showToast }) =>{
     };
 
 
+    const closemodal = (status) => {
+        console.log("status: ", status);
+        if(status == "true"){
+            onRefresh();
+            toast.success("Update date time success !", {
+                position: toast.POSITION.TOP_CENTER
+            });      
+        }
+        setIsModalOpen(false);
+    };
+
+
     const handleRowClick = (id) => {
         // console.log("i have access the handle row click: ", id);
         setSelectedId(id); // Set the selected ID
@@ -77,9 +93,42 @@ export const Table = ({ data, onRefresh, showToast }) =>{
     };
 
 
+    const handleSwitchClickSetting = (roomId, status) => {
+        
+        if(status == 1){
+
+                // const currentDate = new Date();
+      // console.log("current date: ", currentDate);
+      const currentDate = new Date();
+      // const endDaateValue = moment(currentDate).toDate();
+      // const formattedEndDatetime = moment(endDaateValue).format("MMMM d, yyyy h:mm aa");
+      // console.log("formattedEndDatetime: ", formattedEndDatetime);
+      Axios.post("https://web-intractive-system-app-api.onrender.com/room/datetime/update/"+roomId, {
+                    endDate : currentDate
+      },{
+        headers: { Authorization: `Bearer ${token}` }
+      }).then(response2 => {
+              console.log("update room setting successful");
+            // // setShowSuccessModal(true);
+            // showToast('Update room successfully', 'success', 'Successful');
+            // onCloseModals(); 
+            onRefresh(true);
+        })
+        .catch(error2 => {
+            console.log("Error exception on update room setting: ", error2);
+        })      
+
+
+        }else{
+            toggleModal(<ActiveRoom onCloseModals={closemodal} roomId={roomId} />, '700px','3000px', 'Active DateTime Option');
+        }
+    };
+
+
 
     return(
         <div>
+            <ToastContainer />
             <table className="table table-striped">
                 <thead>
                     <tr>
@@ -94,7 +143,7 @@ export const Table = ({ data, onRefresh, showToast }) =>{
                 </thead>
                 <tbody>
                 {itemsToDisplay.map((item, index) => (
-                    <TableRow key={index} item={item} onRefresh={onRefresh} onRowClick={handleRowClick} showToast={showToast}  openModal={toggleModal} onRowClickSetting={handleRowSettingClick} />
+                    <TableRow key={index} item={item} onRefresh={onRefresh} onRowClick={handleRowClick} showToast={showToast}  openModal={toggleModal} onRowClickSetting={handleRowSettingClick} onSwitchClickSetting={handleSwitchClickSetting} />
                 ))}
                 </tbody>
             </table>

@@ -2,7 +2,10 @@
     import { Loading, Table, Navbar, Toast, SuperAdminTable } from '../components/index';
     import { useUser } from './userProvider'; // Import useUser from the context
     import moment from 'moment';
-
+    import { toast, ToastContainer } from 'react-toastify';
+    import "react-toastify/dist/ReactToastify.css";
+  
+  
 
     import Axios from 'axios'; // Import Axios
 
@@ -41,13 +44,34 @@
               setRoom((prevRoom) => {
                 const updatedRoom = prevRoom.map((item) => {
 
+
                     const endDatetime = moment(item.end_dates).toDate();
-                    const formattedEndDatetime = moment(item.end_dates).format('DD/MM/YYYY HH:mm:ss a');
-                    const formattedStartDatetime = moment(item.start_date).format('DD/MM/YYYY HH:mm:ss a');
-                    //============================
+                    const startDatetime = moment(item.start_date).toDate();
+
+                    // console.log("==========================");
+                    // console.log("room name: ", item.room_name);
+                    
+                    const startDateValue = moment(item.start_date).toDate();
+                    const formattedStartDatetime = moment(startDateValue).format("MMMM D, YYYY h:mm A");
+                    const endDaateValue = moment(item.end_dates).toDate();
+                    const formattedEndDatetime = moment(endDaateValue).format("MMMM D, YYYY h:mm A");
+                    // console.log("start datex: ", formattedDate);
+                    // console.log("end date: ", item.end_dates);
+                    // console.log("===========================");
+                    
+                    // const formattedEndDatetimess = moment.utc(endDatetime).format('DD/MM/YYYY HH:mm:ss a');
+                    // const formattedStartDatetime = moment.utc(item.start_date).format('DD/MM/YYYY HH:mm:ss a');
+                    // //============================
                     const now = moment();
-                    const remainingSecondss = moment(endDatetime).diff(now, 'seconds');
-                    // console.log("========================================");
+                    // console.log("room name: ", item.room_name);
+                    // console.log("formattedEndDatetime: ", formattedEndDatetime);
+                    // console.log("formattedEndDatetimess: ", formattedEndDatetimess);
+                    const remainingSecondsStart = moment(formattedStartDatetime).diff(now, 'seconds');                    
+                    const remainingSecondss = moment(formattedEndDatetime).diff(now, 'seconds');
+
+                    if(remainingSecondsStart <= 0){
+
+                          // console.log("========================================");
                     // console.log("end datetime: ", endDatetime);
                     // console.log("remaining seconds: ", remainingSecondss);
                     const hours = Math.floor(remainingSecondss / 3600);
@@ -75,6 +99,14 @@
                 //     };
                 //   }
 
+                    }else{
+
+                        var remainingTimes = "24:00:00";
+
+                    }
+                    
+                  
+
                 if (remainingTimes === 'NaN:NaN:NaN' || remainingSecondss < 0) {
                     // If remainingTimes is NaN or negative, set it to "24:00:00"
                     remainingTimes = '24:00:00';
@@ -86,8 +118,8 @@
                     ...item,
                     remaining_time: remainingTimes,
                     roomStatus: isActive ? 1 : 0, // Set roomStatus to 1 if active, 0 if not
+                    local_format_end_date: formattedEndDatetime,
                     local_format_start_date: formattedStartDatetime,
-                    local_format_end_date: formattedEndDatetime
                   };
                 });
                 return updatedRoom;
@@ -99,6 +131,7 @@
             };
           }, []);
           
+
 
         if (token) {
             // Token exists in localStorage
@@ -121,14 +154,14 @@
                 setRoom(response.data);
                 // console.log("this is the response data from dashboard: ", response.data['end_dates']);
                 if(isRefresh === true){
-                    setToastHeader('Successful');
-                    setToastMessage('Create Room Successfully'); // Set toast message on error
-                    setToastShow(true); // Show the toast on error
-                    setToastType('success');
-                    // Automatically hide the toast after a certain duration (e.g., 5000 milliseconds or 5 seconds)
-                    setTimeout(() => {
-                      setToastShow(false);
-                    }, 2000); // Adjust the duration as needed
+                    // setToastHeader('Successful');
+                    // setToastMessage('Create Room Successfully'); // Set toast message on error
+                    // setToastShow(true); // Show the toast on error
+                    // setToastType('success');
+                    // // Automatically hide the toast after a certain duration (e.g., 5000 milliseconds or 5 seconds)
+                    toast.success("Create room success !", {
+                        position: toast.POSITION.TOP_CENTER
+                    });                
                 }
             })
             .catch(error => {
@@ -162,7 +195,7 @@
 
         const showToast = (message, type, header) => {
             setToastMessage(message);
-            setToastType(type);
+            setToastType("success");
             setToastHeader(header);
             setToastShow(true);
             setTimeout(() => {
@@ -183,9 +216,10 @@
             })
         };
 
-
+    
         return(
             <div>
+                <ToastContainer />
                 <Loading show={loading}/>
                 <div style={{ paddingTop: '95px' }}>
                     <div className="container dashboard-container">
@@ -206,7 +240,8 @@
                         </div>
                     </div>
                 </div>
-                <Toast show={toastShow} message={toastMessage} type={toastType} title={toastHeader} />
+                {/* <Toast show={toastShow} message={toastMessage} type={toastType} title={toastHeader} /> */}
+               
             </div>
         )
         

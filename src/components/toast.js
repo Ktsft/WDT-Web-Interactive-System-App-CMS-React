@@ -24,7 +24,7 @@ export const Toast = ({ show, message, type, title }) => {
     <div>
         {
             show &&
-            <Notification closable type={type} header={title} style={customStyles}>
+            <Notification closable  type={type || 'info'}  header={title} style={customStyles}>
                 <div style={messageStyles}>
                     {message} {/* Set the message here */}
                 </div>

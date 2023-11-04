@@ -52,7 +52,7 @@ body{
 }
 
 .create-room-table-label-cell{
-    width: 40%; 
+    width: 25%; 
 }
 
 .create-room-table-input-cell{
@@ -101,7 +101,7 @@ body{
 
 
 .custom-datepicker-width {
-    width: 350% !important;
+    width: 307% !important;
 }
 
 
@@ -133,5 +133,4 @@ body{
 .move-right {
     justify-content: flex-end;
 }
-
 
