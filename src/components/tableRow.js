@@ -56,7 +56,7 @@ function secondsToHHMMSS(seconds) {
     
 // }
 
-function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClickSetting, onSwitchClickSetting }) {
+function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClickSetting,   onSwitchClickSetting }) {
   // const [remainingTime, setRemainingTime] = useState(calculateRemainingTimes(item));
   
   const [roomStatus, setRoomStatus] = useState(item.room_status);
@@ -246,7 +246,7 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClic
               type="checkbox"
               className="form-check-input"
               role="switch"
-              onChange={() => onSwitchClickSetting(item.id, item.roomStatus)}
+              onChange={() => onSwitchClickSetting(item.id, item.roomStatus, item.status_Activate)}
               checked={item.roomStatus}
               id={`switch_${item.id}`}
             />

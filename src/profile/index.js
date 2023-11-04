@@ -7,3 +7,4 @@ export * from "./activeRoom";
 export * from "./verify";
 export * from "./userProfile";
 export * from "./grettingRoom";
+export * from "./createSuperAdmin";

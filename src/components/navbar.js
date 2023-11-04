@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 // import { useHistory } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
 
-import { User, CreateRoom } from "../profile/index";
+import { User, CreateRoom, CreateSuperAdmin } from "../profile/index";
 import { Modal } from "./modal";
 import { UserIcon, CreateIcon, LogOutIcon } from "../assets/icon";
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+
 
 export const Navbar = ({ username, onRefresh, isRoles }) => {
 
@@ -95,7 +98,18 @@ export const Navbar = ({ username, onRefresh, isRoles }) => {
                             </a>
                             </div>
                         </li>
-                        ) : null}
+                        ) : 
+                        
+                        <li className="nav-item active">
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <CreateIcon style={{ marginRight: '1px' }} />
+                            <a className="nav-link" href="#" onClick={() => toggleModal(<CreateSuperAdmin onCloseModals={onCloseModals} />,'790px','1500px', 'Create Super Admin')} >
+                                Create Superadmin <span className="sr-only"></span>
+                            </a>
+                            </div>
+                        </li>
+                        
+                        }
                         <li className="nav-item">
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <LogOutIcon style={{ marginLeft: '4px' }} />

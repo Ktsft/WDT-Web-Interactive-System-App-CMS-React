@@ -107,9 +107,14 @@
                     
                   
 
-                if (remainingTimes === 'NaN:NaN:NaN' || remainingSecondss < 0) {
+                if (remainingTimes === 'NaN:NaN:NaN' || item.active_status == 1) {
                     // If remainingTimes is NaN or negative, set it to "24:00:00"
                     remainingTimes = '24:00:00';
+                  }
+                  var statusActivate = 0;
+                  if(remainingSecondss < 0){
+                    remainingTimes = '24:00:00';
+                    statusActivate = 3;
                   }
                 
                 const isActive = remainingTimes !== '24:00:00';
@@ -120,6 +125,7 @@
                     roomStatus: isActive ? 1 : 0, // Set roomStatus to 1 if active, 0 if not
                     local_format_end_date: formattedEndDatetime,
                     local_format_start_date: formattedStartDatetime,
+                    status_Activate: statusActivate,
                   };
                 });
                 return updatedRoom;

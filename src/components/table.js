@@ -14,6 +14,9 @@ export const Table = ({ data, onRefresh, showToast }) =>{
     const itemsPerPage = 10; // Number of items to display per page
     const [currentPage, setCurrentPage] = useState(1);
     const token = localStorage.getItem('token');
+    const [title, setTitle] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [isModalOpens, setIsModalOpens] = useState(false); // State to control the modal
 
     const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
     const [modalContent, setModalContent] = useState(''); // Content for the modal
@@ -93,38 +96,70 @@ export const Table = ({ data, onRefresh, showToast }) =>{
     };
 
 
-    const handleSwitchClickSetting = (roomId, status) => {
-        
+    const handleSwitchClickSetting = (roomId, status, statusOfActivate) => {
+        // console.log("status", statusOfActivate);
+
+        if(statusOfActivate == 3){
+            setModalTitle("Warning");
+            setModalContent("Please top up to renew the room date time!");
+            // onCloseModals();
+            setModalHeight("200px");
+            setModalWidth("400px");
+            setIsModalOpens(true);
+        }
+
         if(status == 1){
+            //update enddate with current time
+            // const currentDate = new Date();
+            // Axios.post("https://web-intractive-system-app-api.onrender.com/room/datetime/update/"+roomId, {
+            //                 endDate : currentDate
+            // },{
+            //     headers: { Authorization: `Bearer ${token}` }
+            // }).then(response2 => {
+            //         console.log("update room setting successful");
+            //         onRefresh(true);
+            //     })
+            //     .catch(error2 => {
+            //         console.log("Error exception on update room setting: ", error2);
+            //     }) 
 
-                // const currentDate = new Date();
-      // console.log("current date: ", currentDate);
-      const currentDate = new Date();
-      // const endDaateValue = moment(currentDate).toDate();
-      // const formattedEndDatetime = moment(endDaateValue).format("MMMM d, yyyy h:mm aa");
-      // console.log("formattedEndDatetime: ", formattedEndDatetime);
-      Axios.post("https://web-intractive-system-app-api.onrender.com/room/datetime/update/"+roomId, {
-                    endDate : currentDate
-      },{
-        headers: { Authorization: `Bearer ${token}` }
-      }).then(response2 => {
-              console.log("update room setting successful");
-            // // setShowSuccessModal(true);
-            // showToast('Update room successfully', 'success', 'Successful');
-            // onCloseModals(); 
-            onRefresh(true);
-        })
-        .catch(error2 => {
-            console.log("Error exception on update room setting: ", error2);
-        })      
-
+            const id = roomId;
+            Axios.post("https://web-intractive-system-app-api.onrender.com/room/activate/update/"+id, {
+                activeStatus: 1
+            },{
+                headers: { Authorization: `Bearer ${token}` }
+            }).then(response2 => {
+                    console.log("update room setting successful");
+                    onRefresh(true);
+            })
+            .catch(error2 => {
+                    console.log("Error exception on update room setting: ", error2);
+            }) 
+            
+            
 
         }else{
-            toggleModal(<ActiveRoom onCloseModals={closemodal} roomId={roomId} />, '700px','3000px', 'Active DateTime Option');
+
+            const id = roomId;
+            Axios.post("https://web-intractive-system-app-api.onrender.com/room/activate/update/"+id, {
+                activeStatus: 0
+            },{
+                headers: { Authorization: `Bearer ${token}` }
+            }).then(response2 => {
+                    console.log("update room setting successful");
+                    onRefresh(true);
+            })
+            .catch(error2 => {
+                    console.log("Error exception on update room setting: ", error2);
+            }) 
+            
+            //toggleModal(<ActiveRoom onCloseModals={closemodal} roomId={roomId} />, '700px','3000px', 'Active DateTime Option');
         }
     };
 
-
+    const handleModalConfirmation = () => {
+        setIsModalOpens(false);
+    };
 
     return(
         <div>
@@ -182,14 +217,15 @@ export const Table = ({ data, onRefresh, showToast }) =>{
             </nav>
 
 
-            {isModalOpen && (
+            {isModalOpens && (
                 <Modal
-                    show={isModalOpen}
+                    show={isModalOpens}
                     onHide={onCloseModal}
                     title={modalTitle}
                     width={modalWidth}
                     height={modalHeight}
                     content={modalContent}
+                    confirmationCallback={handleModalConfirmation} 
                 />
                 )}
 
