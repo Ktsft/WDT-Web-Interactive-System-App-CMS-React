@@ -105,8 +105,11 @@
 
                     }
                     
-                  
-
+                    var formattedCountDownTime = "";
+                    if(item.last_count_down_time != null){
+                        formattedCountDownTime = formatCountdownTime(item.last_count_down_time);
+                    }
+                    
                 if (remainingTimes === 'NaN:NaN:NaN' || item.active_status == 1) {
                     // If remainingTimes is NaN or negative, set it to "24:00:00"
                     remainingTimes = '24:00:00';
@@ -118,7 +121,8 @@
                   }
                 
                 const isActive = remainingTimes !== '24:00:00';
-                  
+                //console.log("TypeError: Cannot read properties of undefined (reading 'split')", item.last_count_down_time);
+                
                 return {
                     ...item,
                     remaining_time: remainingTimes,
@@ -126,6 +130,7 @@
                     local_format_end_date: formattedEndDatetime,
                     local_format_start_date: formattedStartDatetime,
                     status_Activate: statusActivate,
+                    last_countdown_time: formattedCountDownTime, // Format last_countdown_time
                   };
                 });
                 return updatedRoom;
@@ -137,6 +142,17 @@
             };
           }, []);
           
+
+          function formatCountdownTime(timeString) {
+            const parts = timeString.split(':');
+            if (parts.length === 3) {
+              const hours = parts[0].padStart(2, '0');
+              const minutes = parts[1].padStart(2, '0');
+              const seconds = parts[2].padStart(2, '0');
+              return `${hours}:${minutes}:${seconds}`;
+            }
+            return 'Invalid Time'; // Handle invalid input
+          }
 
 
         if (token) {

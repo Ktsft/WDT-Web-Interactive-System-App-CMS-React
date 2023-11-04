@@ -1,6 +1,8 @@
     import React, { useState, useEffect } from 'react';
+    import { GearIcon } from '../assets/icon';
     import '../styles/app.css';
     import Axios from 'axios';
+    import moment from 'moment';
 
 
     export const UserProfile = ({id = 'default-id', onClose}) => {
@@ -23,6 +25,78 @@
             if(id !== 'default-id'){
                 onHandleTotalRoomCreated(id);
             }
+        }, []);
+
+        useEffect(() => {
+            const interval = setInterval(() => {
+                setData((prevRoom) => {
+                  const updatedRoom = prevRoom.map((item) => {
+  
+  
+                      const endDatetime = moment(item.end_dates).toDate();
+                      const startDatetime = moment(item.start_date).toDate();
+  
+                      // console.log("==========================");
+                      // console.log("room name: ", item.room_name);
+                      
+                      const startDateValue = moment(item.start_date).toDate();
+                      const formattedStartDatetime = moment(startDateValue).format("MMMM D, YYYY h:mm A");
+                      const endDaateValue = moment(item.end_dates).toDate();
+                      const formattedEndDatetime = moment(endDaateValue).format("MMMM D, YYYY h:mm A");
+                      // console.log("start datex: ", formattedDate);
+                      // console.log("end date: ", item.end_dates);
+                      // console.log("===========================");
+                      
+                      // const formattedEndDatetimess = moment.utc(endDatetime).format('DD/MM/YYYY HH:mm:ss a');
+                      // const formattedStartDatetime = moment.utc(item.start_date).format('DD/MM/YYYY HH:mm:ss a');
+                      // //============================
+                      const now = moment();
+                      // console.log("room name: ", item.room_name);
+                      // console.log("formattedEndDatetime: ", formattedEndDatetime);
+                      // console.log("formattedEndDatetimess: ", formattedEndDatetimess);
+                      const remainingSecondsStart = moment(formattedStartDatetime).diff(now, 'seconds');                    
+                      const remainingSecondss = moment(formattedEndDatetime).diff(now, 'seconds');
+  
+                      if(remainingSecondsStart <= 0){
+                      const hours = Math.floor(remainingSecondss / 3600);
+                      // console.log("remaining seconds: ", hours);
+                      const minutes = Math.floor((remainingSecondss % 3600) / 60);
+                      // console.log("remaining seconds: ", minutes);
+                      const seconds = remainingSecondss % 60;
+                      // console.log("remaining seconds: ", seconds);
+                      var remainingTimes = `${hours}:${minutes}:${seconds}`;
+                    }else{
+                          var remainingTimes = "24:00:00";
+                    }
+
+                  if (remainingTimes === 'NaN:NaN:NaN' || item.active_status == 1) {
+                      // If remainingTimes is NaN or negative, set it to "24:00:00"
+                      remainingTimes = '24:00:00';
+                    }
+                    var statusActivate = 0;
+                    if(remainingSecondss < 0){
+                      remainingTimes = '24:00:00';
+                      statusActivate = 3;
+                    }
+                  
+                  const isActive = remainingTimes !== '24:00:00';
+                    
+                  return {
+                      ...item,
+                      remaining_time: remainingTimes,
+                      roomStatus: isActive ? 1 : 0, // Set roomStatus to 1 if active, 0 if not
+                      local_format_end_date: formattedEndDatetime,
+                      local_format_start_date: formattedStartDatetime,
+                      status_Activate: statusActivate,
+                    };
+                  });
+                  return updatedRoom;
+                });
+              }, 1000);
+            
+              return () => {
+                clearInterval(interval);
+              };
         }, []);
 
         const onHandleTotalRoomCreated = (id) => {
@@ -61,6 +135,7 @@
                             <th scope="col">Room ID</th>
                             <th scope="col">Room Name</th>
                             <th scope="col">Room Description</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,6 +144,11 @@
                                 <th scope="row">{item.id}</th>
                                 <th>{item.room_name}</th>
                                 <th>{item.room_description}</th>
+                                <th>
+                                <button className="btn btn-danger" id={`gearButton_${item.id}`} >
+                                    Add Hour
+                                </button>
+                                </th>
                             </tr>
                         ))}
                     </tbody>

@@ -96,65 +96,71 @@ export const Table = ({ data, onRefresh, showToast }) =>{
     };
 
 
-    const handleSwitchClickSetting = (roomId, status, statusOfActivate) => {
+    const handleSwitchClickSetting = (roomId, status, statusOfActivate, lastRemainingCountdownTime, remaningtime) => {
         // console.log("status", statusOfActivate);
+        console.log("status", remaningtime);
 
-        if(statusOfActivate == 3){
-            setModalTitle("Warning");
-            setModalContent("Please top up to renew the room date time!");
-            // onCloseModals();
-            setModalHeight("200px");
-            setModalWidth("400px");
-            setIsModalOpens(true);
+        if(lastRemainingCountdownTime != '24:00:00'){
+            if(statusOfActivate == 3){
+                setModalTitle("Warning");
+                setModalContent("Please top up to renew the room date time!");
+                // onCloseModals();
+                setModalHeight("200px");
+                setModalWidth("400px");
+                setIsModalOpens(true);
+            }
+    
+            if(status == 1){
+                //update enddate with current time
+                // const currentDate = new Date();
+                // Axios.post("https://web-intractive-system-app-api.onrender.com/room/datetime/update/"+roomId, {
+                //                 endDate : currentDate
+                // },{
+                //     headers: { Authorization: `Bearer ${token}` }
+                // }).then(response2 => {
+                //         console.log("update room setting successful");
+                //         onRefresh(true);
+                //     })
+                //     .catch(error2 => {
+                //         console.log("Error exception on update room setting: ", error2);
+                //     }) 
+    
+                const id = roomId;
+                Axios.post("https://web-intractive-system-app-api.onrender.com/room/activate/update/"+id, {
+                    activeStatus: 1,
+                    endDate: remaningtime
+                },{
+                    headers: { Authorization: `Bearer ${token}` }
+                }).then(response2 => {
+                        console.log("update room setting successful");
+                        onRefresh(true);
+                })
+                .catch(error2 => {
+                        console.log("Error exception on update room setting: ", error2);
+                }) 
+                
+                
+    
+            }else{
+    
+                const id = roomId;
+                Axios.post("https://web-intractive-system-app-api.onrender.com/room/activate/update/"+id, {
+                    activeStatus: 0,
+                    endDate: ""
+                },{
+                    headers: { Authorization: `Bearer ${token}` }
+                }).then(response2 => {
+                        console.log("update room setting successful");
+                        onRefresh(true);
+                })
+                .catch(error2 => {
+                        console.log("Error exception on update room setting: ", error2);
+                }) 
+                
+                //toggleModal(<ActiveRoom onCloseModals={closemodal} roomId={roomId} />, '700px','3000px', 'Active DateTime Option');
+            }
         }
-
-        if(status == 1){
-            //update enddate with current time
-            // const currentDate = new Date();
-            // Axios.post("https://web-intractive-system-app-api.onrender.com/room/datetime/update/"+roomId, {
-            //                 endDate : currentDate
-            // },{
-            //     headers: { Authorization: `Bearer ${token}` }
-            // }).then(response2 => {
-            //         console.log("update room setting successful");
-            //         onRefresh(true);
-            //     })
-            //     .catch(error2 => {
-            //         console.log("Error exception on update room setting: ", error2);
-            //     }) 
-
-            const id = roomId;
-            Axios.post("https://web-intractive-system-app-api.onrender.com/room/activate/update/"+id, {
-                activeStatus: 1
-            },{
-                headers: { Authorization: `Bearer ${token}` }
-            }).then(response2 => {
-                    console.log("update room setting successful");
-                    onRefresh(true);
-            })
-            .catch(error2 => {
-                    console.log("Error exception on update room setting: ", error2);
-            }) 
-            
-            
-
-        }else{
-
-            const id = roomId;
-            Axios.post("https://web-intractive-system-app-api.onrender.com/room/activate/update/"+id, {
-                activeStatus: 0
-            },{
-                headers: { Authorization: `Bearer ${token}` }
-            }).then(response2 => {
-                    console.log("update room setting successful");
-                    onRefresh(true);
-            })
-            .catch(error2 => {
-                    console.log("Error exception on update room setting: ", error2);
-            }) 
-            
-            //toggleModal(<ActiveRoom onCloseModals={closemodal} roomId={roomId} />, '700px','3000px', 'Active DateTime Option');
-        }
+        
     };
 
     const handleModalConfirmation = () => {

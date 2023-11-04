@@ -40,7 +40,7 @@ export const SuperAdminTable = ({ data, onRefresh }) => {
 
     const onHandleRowClick = (id) => {
         // console.log("superadmin row clicked: ", id);
-        toggleModal(<UserProfile id={id} onClose={onCloseModal} />, '900px', '1500px', 'User Profile')
+        toggleModal(<UserProfile id={id} onClose={onCloseModal} />, '1000px', '1500px', 'User Profile')
     };
 
 

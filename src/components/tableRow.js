@@ -227,13 +227,14 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClic
     document.body.removeChild(a);	
   };
 
+
   
   return (
     <tr>
       <th scope="row">{item.id}</th>
       <td>{item.room_name}</td>
       <td>Wedding room</td>
-      <td>{item.remaining_time || '0:0:0.000000'}</td>
+      <td> {item.active_status === 1 ? item.last_countdown_time : item.remaining_time || '0:0:0.000000'}</td>
       <td style={{width: '270px'}}>
         {item.start_date !== 'Invalid date' && item.local_format_end_date !== 'Invalid date' ? 
           `${item.local_format_start_date} - ${item.local_format_end_date}` :
@@ -246,7 +247,7 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClic
               type="checkbox"
               className="form-check-input"
               role="switch"
-              onChange={() => onSwitchClickSetting(item.id, item.roomStatus, item.status_Activate)}
+              onChange={() => onSwitchClickSetting(item.id, item.roomStatus, item.status_Activate, item.last_remaining_countDown, item.remaining_time)}
               checked={item.roomStatus}
               id={`switch_${item.id}`}
             />
