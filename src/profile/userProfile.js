@@ -1,5 +1,6 @@
     import React, { useState, useEffect } from 'react';
     import { GearIcon } from '../assets/icon';
+    import { Modal } from '../components/index';
     import '../styles/app.css';
     import Axios from 'axios';
     import moment from 'moment';
@@ -11,6 +12,13 @@
         // const [roomName, setRoomName] = useState("");
         const [data, setData] = useState([]);
         const [totalRoom, setTotalRoom] = useState(0);
+        const token = localStorage.getItem('token');
+
+        const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
+        const [modalContent, setModalContent] = useState(''); // Content for the modal
+        const [modalTitle, setModalTitle] = useState(''); // Title for the modal
+        const [modalWidth, setModalWidth] = useState(''); // Width for the modal
+        const [modalHeight, setModalHeight] = useState(''); // Height for the modal
 
         const itemsPerPage = 10; // Number of items to display per page
         const [currentPage, setCurrentPage] = useState(1);
@@ -25,7 +33,7 @@
             if(id !== 'default-id'){
                 onHandleTotalRoomCreated(id);
             }
-        }, []);
+        }, [id]);
 
         useEffect(() => {
             const interval = setInterval(() => {
@@ -100,10 +108,11 @@
         }, []);
 
         const onHandleTotalRoomCreated = (id) => {
+            console.log("id: ", id);
             Axios.get("https://web-intractive-system-app-api.onrender.com/get/roomByCreated/"+id, {}, {
             })
             .then(response => {
-            //console.log("this is the total_room: ", response.data);
+                console.log("this is the total_room: ", response.data);
                 setTotalRoom(response.data[0].total_room);
                 setData(response.data);
             })
@@ -116,6 +125,73 @@
             if (newPage >= 1 && newPage <= totalPages) {
               setCurrentPage(newPage);
             }
+        };
+
+
+        const handleUpdateEnddatetime = (ids, endDates) => {
+            // console.log("id: ", id);
+            // console.log("endDates: ", endDates);
+            // const originalDate = new Date(endDates);
+            console.log("enddates : ", endDates);
+            const originalDateTime = endDates;
+            const newDateTime = addOneHourToDateTime(originalDateTime);
+            // console.log("test",newDateTime); // Output: "2023-11-06T03:30:00.000Z"
+
+
+            // const endDaateValue = moment(originalDateTime).toDate();
+            // const formattedEndDatetime = moment(endDaateValue).format("MMMM D, YYYY h:mm A");
+            // console.log("formattedEndDatetime: ", formattedEndDatetime);
+
+            // const endDaateValues = moment(newDateTime).toDate();
+            // const formattedEndDatetimes = moment(endDaateValues).format("MMMM D, YYYY h:mm A");
+            // console.log("add one hour: ", formattedEndDatetimes);
+
+            Axios.post("https://web-intractive-system-app-api.onrender.com/room/datetime/update/"+ids, {
+                    endDate: newDateTime
+                },{
+                    headers: { Authorization: `Bearer ${token}` }
+                }).then(response2 => {
+                        console.log("update room setting successful");
+                        setModalTitle("Success");
+                        setModalContent("Add hour successfully");
+                        // onCloseModals();
+                        setModalHeight("200px");
+                        setModalWidth("400px");
+                        setIsModalOpen(true);
+                })
+                .catch(error2 => {
+                        console.log("Error exception on update room setting: ", error2);
+                }) 
+            // // Add one hour
+            // originalDate.setHours(originalDate.getHours() + 1);
+
+            // // Format the result as a string in the same format
+            // const result = originalDate.toISOString().slice(0, -5) + "+00"; // Remove milliseconds
+
+            // console.log("result : ", result);
+
+        };
+
+
+
+        function addOneHourToDateTime(dateTimeString) {
+            // Convert the string to a Date object
+            const originalDate = new Date(dateTimeString);
+          
+            // Add one hour
+            originalDate.setHours(originalDate.getHours() + 1);
+          
+            // Format the result as a string in the same format
+            const result = originalDate.toISOString();
+            
+            return result;
+          }
+
+
+          const onCloseModal = () => {
+            // console.log("this is the on close modal pressed");
+            setIsModalOpen(false);
+            onHandleTotalRoomCreated(id);
         };
 
         return(
@@ -145,7 +221,7 @@
                                 <th>{item.room_name}</th>
                                 <th>{item.room_description}</th>
                                 <th>
-                                <button className="btn btn-danger" id={`gearButton_${item.id}`} >
+                                <button className="btn btn-danger" id={`addhour_${item.id}` } onClick={() => handleUpdateEnddatetime(item.id, item.end_dates)}>
                                     Add Hour
                                 </button>
                                 </th>
@@ -191,6 +267,18 @@
                     <button className="btn btn-danger" onClick={onClose}>Close</button>
                 </div>
                 
+                {isModalOpen && (
+                <Modal
+                    show={isModalOpen}
+                    onHide={onCloseModal}
+                    title={modalTitle}
+                    width={modalWidth}
+                    height={modalHeight}
+                    content={modalContent}
+                    confirmationCallback={onCloseModal} 
+                />
+                )}
+
             </div>
         )
     }

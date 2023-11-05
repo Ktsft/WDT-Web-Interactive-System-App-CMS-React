@@ -48,16 +48,15 @@
                     const endDatetime = moment(item.end_dates).toDate();
                     const startDatetime = moment(item.start_date).toDate();
 
-                    // console.log("==========================");
-                    // console.log("room name: ", item.room_name);
-                    
+                    console.log("==========================");
+                    console.log("room name: ", item.room_name);
                     const startDateValue = moment(item.start_date).toDate();
                     const formattedStartDatetime = moment(startDateValue).format("MMMM D, YYYY h:mm A");
                     const endDaateValue = moment(item.end_dates).toDate();
                     const formattedEndDatetime = moment(endDaateValue).format("MMMM D, YYYY h:mm A");
-                    // console.log("start datex: ", formattedDate);
-                    // console.log("end date: ", item.end_dates);
-                    // console.log("===========================");
+                    console.log("start datex: ", item.end_dates);
+                    console.log("end date: ", formattedEndDatetime);
+                    console.log("===========================");
                     
                     // const formattedEndDatetimess = moment.utc(endDatetime).format('DD/MM/YYYY HH:mm:ss a');
                     // const formattedStartDatetime = moment.utc(item.start_date).format('DD/MM/YYYY HH:mm:ss a');
