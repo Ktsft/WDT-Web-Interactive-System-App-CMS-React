@@ -54,7 +54,7 @@ export const Navbar = ({ username, onRefresh, isRoles }) => {
 
     const onCloseModal = () => {
         // console.log("this is the on close modal pressed");
-        onRefresh(true);
+        onRefresh(false);
         setIsModalOpen(false);
     };
 

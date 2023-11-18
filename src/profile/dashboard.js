@@ -48,15 +48,15 @@
                     const endDatetime = moment(item.end_dates).toDate();
                     const startDatetime = moment(item.start_date).toDate();
 
-                    console.log("==========================");
-                    console.log("room name: ", item.room_name);
+                    // console.log("==========================");
+                    // console.log("room name: ", item.room_name);
                     const startDateValue = moment(item.start_date).toDate();
                     const formattedStartDatetime = moment(startDateValue).format("MMMM D, YYYY h:mm A");
                     const endDaateValue = moment(item.end_dates).toDate();
                     const formattedEndDatetime = moment(endDaateValue).format("MMMM D, YYYY h:mm A");
-                    console.log("start datex: ", item.end_dates);
-                    console.log("end date: ", formattedEndDatetime);
-                    console.log("===========================");
+                    // console.log("start datex: ", item.end_dates);
+                    // console.log("end date: ", formattedEndDatetime);
+                    // console.log("===========================");
                     
                     // const formattedEndDatetimess = moment.utc(endDatetime).format('DD/MM/YYYY HH:mm:ss a');
                     // const formattedStartDatetime = moment.utc(item.start_date).format('DD/MM/YYYY HH:mm:ss a');
@@ -172,6 +172,7 @@
             })
             .then(response => {
                 // console.log('this is the room resposne: ', response.data);
+                console.log("isRefresh: ", isRefresh);
                 setRoom(response.data);
                 // console.log("this is the response data from dashboard: ", response.data['end_dates']);
                 if(isRefresh === true){
@@ -244,7 +245,7 @@
                 <Loading show={loading}/>
                 <div style={{ paddingTop: '95px' }}>
                     <div className="container dashboard-container">
-                        <Navbar onShowModal={toggleModal}  username={ username? username:''} onRefresh={() => getAllRoom(true)} isRoles = {roles} />
+                        <Navbar onShowModal={toggleModal}  username={ username? username:''} onRefresh={() => getAllRoom(false)} isRoles = {roles} />
                         <div className="table-container">
                             {roles === 'admin' ? (
                             // Render admin table if roles are 'admin'

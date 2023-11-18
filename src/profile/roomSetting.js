@@ -9,7 +9,6 @@ import dateFormat from 'dateformat';
 
 
 export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToast }) => {
-
     const token = localStorage.getItem('token');
     const [gameMode, setGameMode] = useState("");
     const [themeIndex, setThemeIndex] = useState("");
@@ -247,12 +246,12 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
 
 
     const updateRoomSetting = () => {
-
+        console.log("room setting pressed");
         const timeDifference = endDate - startDate;
         console.log("timeDifference: ", timeDifference);
         const timeDifferenceInHours = timeDifference / (1000 * 60 * 60);
         console.log("timeDifferenceInHours: ", timeDifferenceInHours);
-
+        
         if (timeDifferenceInHours > 24) {
             setShowModal(true);
             setTitle("Warning");
@@ -352,7 +351,7 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
         }
     };
 
-
+    
     return (
         <div className="container">
             <table className="user-table" >

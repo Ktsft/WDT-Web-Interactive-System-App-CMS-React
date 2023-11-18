@@ -18,7 +18,7 @@ export const Table = ({ data, onRefresh, showToast }) =>{
     const [showModal, setShowModal] = useState(false);
     const [isModalOpens, setIsModalOpens] = useState(false); // State to control the modal
 
-    const [isModalOpen, setIsModalOpen] = useState(false); // State to control the modal
+    // const [isModalOpen, setIsModalOpens] = useState(false); // State to control the modal
     const [modalContent, setModalContent] = useState(''); // Content for the modal
     const [modalTitle, setModalTitle] = useState(''); // Title for the modal
     const [modalWidth, setModalWidth] = useState(''); // Width for the modal
@@ -39,42 +39,39 @@ export const Table = ({ data, onRefresh, showToast }) =>{
 
 
     const toggleModal = (content, width, height, title) => {
-        // console.log("this is the height from table.js: ", height);
         setModalContent(content);
         setModalWidth(width);
         setModalHeight(height);
-        setIsModalOpen(true);
         setModalTitle(title);
+        setIsModalOpens(true);
     };
 
 
     const onCloseModal = () => {
         // console.log("this is the on close modal pressed");
-        setIsModalOpen(false);
+        setIsModalOpens(false);
     };
 
 
     const onCloseModals = () => {
         // console.log("this is the on close modal pressed");
         onRefresh(true);
-        setIsModalOpen(false);
+        setIsModalOpens(false);
     };
 
 
     const closemodal = (status) => {
-        console.log("status: ", status);
         if(status == "true"){
             onRefresh();
             toast.success("Update date time success !", {
                 position: toast.POSITION.TOP_CENTER
             });      
         }
-        setIsModalOpen(false);
+        setIsModalOpens(false);
     };
 
 
     const handleRowClick = (id) => {
-        // console.log("i have access the handle row click: ", id);
         setSelectedId(id); // Set the selected ID
         toggleModal(<RoomSetting id={id} onClose={onCloseModal} onCloseModals={onCloseModals} showToast={showToast}/>, '1000px', '1500px', 'Room Setting');
     };
@@ -231,7 +228,7 @@ export const Table = ({ data, onRefresh, showToast }) =>{
                     width={modalWidth}
                     height={modalHeight}
                     content={modalContent}
-                    confirmationCallback={handleModalConfirmation} 
+                    // confirmationCallback={handleModalConfirmation} 
                 />
                 )}
 
