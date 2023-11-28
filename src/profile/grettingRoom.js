@@ -58,7 +58,10 @@ export const GrettingRoom = ({ id = 'default-id', onClose}) => {
 
     const onHandleGrettingMessageDetailByRoom = (id) => {
         //console.log("this is the id", id);
-        Axios.get("https://web-intractive-system-app-api.onrender.com/get/greetingMessageDetailByRoom/"+id, {}, {
+        console.log("token: ", token);
+        Axios.get("https://web-intractive-system-app-api.onrender.com/get/greetingMessageDetailByRoom", {
+            params: { id },
+            headers: { Authorization: `Bearer ${token}` }
         })
         .then(response => {
             setData(response.data);

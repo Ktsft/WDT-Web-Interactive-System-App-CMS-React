@@ -40,20 +40,20 @@
                 setData((prevRoom) => {
                   const updatedRoom = prevRoom.map((item) => {
   
-  
+                    
                       const endDatetime = moment(item.end_dates).toDate();
                       const startDatetime = moment(item.start_date).toDate();
   
-                      // console.log("==========================");
-                      // console.log("room name: ", item.room_name);
+                      console.log("==========================");
+                      console.log("room name: ", item.room_name);
                       
                       const startDateValue = moment(item.start_date).toDate();
                       const formattedStartDatetime = moment(startDateValue).format("MMMM D, YYYY h:mm A");
                       const endDaateValue = moment(item.end_dates).toDate();
                       const formattedEndDatetime = moment(endDaateValue).format("MMMM D, YYYY h:mm A");
                       // console.log("start datex: ", formattedDate);
-                      // console.log("end date: ", item.end_dates);
-                      // console.log("===========================");
+                      console.log("end date: ", item.end_dates);
+                      console.log("===========================");
                       
                       // const formattedEndDatetimess = moment.utc(endDatetime).format('DD/MM/YYYY HH:mm:ss a');
                       // const formattedStartDatetime = moment.utc(item.start_date).format('DD/MM/YYYY HH:mm:ss a');
@@ -146,7 +146,8 @@
             // const formattedEndDatetimes = moment(endDaateValues).format("MMMM D, YYYY h:mm A");
             // console.log("add one hour: ", formattedEndDatetimes);
 
-            Axios.post("https://web-intractive-system-app-api.onrender.com/room/datetime/update/"+ids, {
+            Axios.post("https://web-intractive-system-app-api.onrender.com/room/datetime/update", {
+                    id: ids,
                     endDate: newDateTime
                 },{
                     headers: { Authorization: `Bearer ${token}` }

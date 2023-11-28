@@ -54,7 +54,8 @@ export const ActiveRoom = ({onCloseModals, roomId}) => {
                 return false;
             }else{
                 
-                Axios.post("https://web-intractive-system-app-api.onrender.com/room/activate/date/update/"+id, {
+                Axios.post("https://web-intractive-system-app-api.onrender.com/room/activate/date/update", {
+                    id: id,
                     startDate: startDate,
                     endDate: endDate
                 },{

@@ -81,7 +81,8 @@ export const Table = ({ data, onRefresh, showToast }) =>{
     const handleRowSettingClick = (id) =>{
 
         // console.log("this is handle row setting click: ", id);
-        Axios.get("https://web-intractive-system-app-api.onrender.com/get/roomName/"+id, {}, {
+        Axios.get("https://web-intractive-system-app-api.onrender.com/get/roomName/"+id,{ 
+        headers: { Authorization: `Bearer ${token}` }
         })
         .then(response => {
             let roomNameValue = response.data[0].room_name;
@@ -123,7 +124,8 @@ export const Table = ({ data, onRefresh, showToast }) =>{
                 //     }) 
     
                 const id = roomId;
-                Axios.post("https://web-intractive-system-app-api.onrender.com/room/activate/update/"+id, {
+                Axios.post("https://web-intractive-system-app-api.onrender.com/room/activate/update", {
+                    id:id,    
                     activeStatus: 1,
                     endDate: remaningtime
                 },{
@@ -141,7 +143,8 @@ export const Table = ({ data, onRefresh, showToast }) =>{
             }else{
     
                 const id = roomId;
-                Axios.post("https://web-intractive-system-app-api.onrender.com/room/activate/update/"+id, {
+                Axios.post("https://web-intractive-system-app-api.onrender.com/room/activate/update", {
+                    id:id,
                     activeStatus: 0,
                     endDate: ""
                 },{
