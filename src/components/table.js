@@ -77,7 +77,7 @@ export const Table = ({ data, onRefresh, showToast }) =>{
     };
 
 
-
+ 
     const handleRowSettingClick = (id) =>{
 
         // console.log("this is handle row setting click: ", id);
@@ -97,8 +97,9 @@ export const Table = ({ data, onRefresh, showToast }) =>{
     const handleSwitchClickSetting = (roomId, status, statusOfActivate, lastRemainingCountdownTime, remaningtime) => {
         // console.log("status", statusOfActivate);
         console.log("status", remaningtime);
-
+        
         if(lastRemainingCountdownTime != '24:00:00'){
+            console.log("***** test ******: ", statusOfActivate)
             if(statusOfActivate == 3){
                 setModalTitle("Warning");
                 setModalContent("Please top up to renew the room date time!");

@@ -234,11 +234,14 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClic
       <th scope="row">{item.id}</th>
       <td>{item.room_name}</td>
       <td>Wedding room</td>
-      <td> {item.active_status === 1 ? item.last_countdown_time : item.remaining_time || '0:0:0.000000'}</td>
+      <td> {item.room_status === 0 ? '00:00:00' :
+      (item.active_status === 1 ? item.last_countdown_time : item.remaining_time || '0:0:0.000000')
+      }</td>
       <td style={{width: '270px'}}>
-        {item.start_date !== 'Invalid date' && item.local_format_end_date !== 'Invalid date' ? 
+        {item.room_status === 0 ? '-' : 
+        (item.start_date !== 'Invalid date' && item.local_format_end_date !== 'Invalid date' ? 
           `${item.local_format_start_date} - ${item.local_format_end_date}` :
-          'NA'
+          '-')
         }
         </td>
       <td>
