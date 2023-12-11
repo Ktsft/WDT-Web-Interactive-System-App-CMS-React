@@ -94,13 +94,13 @@ export const Table = ({ data, onRefresh, showToast }) =>{
     };
 
 
-    const handleSwitchClickSetting = (roomId, status, statusOfActivate, lastRemainingCountdownTime, remaningtime) => {
+    const handleSwitchClickSetting = (roomId, status, lastRemainingCountdownTime, remaningtime) => {
         // console.log("status", statusOfActivate);
-        console.log("status", remaningtime);
-        
+        console.log("status: ", status);
+        console.log("remaningtime: ", remaningtime);
+
         if(lastRemainingCountdownTime != '24:00:00'){
-            console.log("***** test ******: ", statusOfActivate)
-            if(statusOfActivate == 3){
+            if(status == 0){
                 setModalTitle("Warning");
                 setModalContent("Please top up to renew the room date time!");
                 // onCloseModals();
@@ -110,24 +110,11 @@ export const Table = ({ data, onRefresh, showToast }) =>{
             }
     
             if(status == 1){
-                //update enddate with current time
-                // const currentDate = new Date();
-                // Axios.post("https://web-intractive-system-app-api.onrender.com/room/datetime/update/"+roomId, {
-                //                 endDate : currentDate
-                // },{
-                //     headers: { Authorization: `Bearer ${token}` }
-                // }).then(response2 => {
-                //         console.log("update room setting successful");
-                //         onRefresh(true);
-                //     })
-                //     .catch(error2 => {
-                //         console.log("Error exception on update room setting: ", error2);
-                //     }) 
-    
-                const id = roomId;
+                
+                const id = roomId;  
                 Axios.post("https://web-intractive-system-app-api.onrender.com/room/activate/update", {
                     id:id,    
-                    activeStatus: 1,
+                    activeStatus: 5,
                     endDate: remaningtime
                 },{
                     headers: { Authorization: `Bearer ${token}` }
@@ -141,12 +128,12 @@ export const Table = ({ data, onRefresh, showToast }) =>{
                 
                 
     
-            }else{
-    
+            }else if (status == 5){
+                console.log("test2");
                 const id = roomId;
                 Axios.post("https://web-intractive-system-app-api.onrender.com/room/activate/update", {
                     id:id,
-                    activeStatus: 0,
+                    activeStatus: 1,
                     endDate: ""
                 },{
                     headers: { Authorization: `Bearer ${token}` }
@@ -159,6 +146,21 @@ export const Table = ({ data, onRefresh, showToast }) =>{
                 }) 
                 
                 //toggleModal(<ActiveRoom onCloseModals={closemodal} roomId={roomId} />, '700px','3000px', 'Active DateTime Option');
+            }else if(status == 4){
+                //console.log("test4");
+                const id = roomId;
+                Axios.post("https://web-intractive-system-app-api.onrender.com/room/activate/update", {
+                    id:id,
+                    activeStatus: 4
+                },{
+                    headers: { Authorization: `Bearer ${token}` }
+                }).then(response2 => {
+                        console.log("update room setting successful");
+                        onRefresh(true);
+                })
+                .catch(error2 => {
+                        console.log("Error exception on update room setting: ", error2);
+                }) 
             }
         }
         

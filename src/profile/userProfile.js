@@ -77,7 +77,7 @@
                           var remainingTimes = "24:00:00";
                     }
 
-                  if (remainingTimes === 'NaN:NaN:NaN' || item.active_status == 1) {
+                  if (remainingTimes === 'NaN:NaN:NaN') {
                       // If remainingTimes is NaN or negative, set it to "24:00:00"
                       remainingTimes = '24:00:00';
                     }

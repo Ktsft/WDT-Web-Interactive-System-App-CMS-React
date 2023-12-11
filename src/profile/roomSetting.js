@@ -28,6 +28,7 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
     const [roomDesc, setRoomDesc] = useState("");
     const [restrictedWord, setRestrictedWord] = useState('');
     const [defaultGreeting, setDefaultGreeting] = useState('');
+    const [roomStatus, setRoomStatus] = useState(0);
 
     const [title, setTitle] = useState('');
     const [showModal, setShowModal] = useState(false);
@@ -57,6 +58,7 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
                     setGameMode(response.data['game_mode']);
                     setThemeIndex(response.data['theme_index']);
                     setLayoutDirection(response.data['layout_direction']);
+                    setRoomStatus(response.data['room_status']);
 
                     //  const startDateValue = moment(response.data["start_date"]).toDate();
                     // // console.log("start date value: ", startDateValue);
@@ -360,13 +362,13 @@ export const RoomSetting = ({ id = 'default-id', onClose, onCloseModals, showToa
                     <th className="create-room-table-label-cell" style={{ padding: '10px' }}>Auto active mode: </th>
                     <td style={{ padding: '29px' }}>
                     <div className="form-check form-switch custom-switch-input">
-                        <input
-                            type="checkbox"
-                            className="form-check-input"
-                            role="switch"
-                            checked={isActiveChecked}
-                            onChange={() => setIsActiveChecked(!isActiveChecked)}
-                        />
+                    <input
+                        type="checkbox"
+                        className="form-check-input"
+                        role="switch"
+                        checked={roomStatus === 1}
+                        onChange={() => setRoomStatus(roomStatus === 1 ? 0 : 1)}
+                    />
                     </div>
                     </td>
                 </tr>

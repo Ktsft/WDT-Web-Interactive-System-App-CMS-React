@@ -3,11 +3,9 @@ import { Loading, Table, Navbar, Toast, SuperAdminTable } from '../components/in
 import { useUser } from './userProvider'; // Import useUser from the context
 import moment from 'moment';
 import { toast, ToastContainer } from 'react-toastify';
+import Axios from 'axios';
 import "react-toastify/dist/ReactToastify.css";
 
-
-
-import Axios from 'axios'; // Import Axios
 
 export const Dashboard = () => {
 
@@ -25,8 +23,7 @@ export const Dashboard = () => {
     const [adminRow, setAdminRow] = useState([]);
 
     const { user, login, logout } = useUser(); // Access user context
-    // console.log("this is the user from dashbaord: ", user)
-    // console.log("this is the outside user: ", user);
+
     useEffect(() => {
         if(token && user){
             getUserById(user);
@@ -36,145 +33,116 @@ export const Dashboard = () => {
                 getAllRoom(false);
             }
         }
-      }, [token, user]); // This effect runs only once when the component mounts          
+      }, [token, user]); // This effect runs only once when the component mounts 
 
 
       useEffect(() => {
         const interval = setInterval(() => {
-          setRoom((prevRoom) => {
-            const updatedRoom = prevRoom.map((item) => {
+            setRoom((prevRoom) => {
+
+                const updatedRoom = prevRoom.map((item) => {
+                    const now = moment();
+                    const currentDate = new Date();
+                    const startDateValue = moment(item.start_date).toDate();
+                    const formattedStartDatetime = moment(startDateValue).format("MMMM D, YYYY h:mm A");
+                    const endDaateValue = moment(item.end_dates).toDate();
+                    const formattedEndDatetime = moment(endDaateValue).format("MMMM D, YYYY h:mm A");
+                    const remaining_duration_check = Math.floor((endDaateValue - currentDate) / 1000);
+                    // const momentFormattedStartDatetime = moment(formattedStartDatetime, "MMMM D, YYYY h:mm A");
+                    // const momentFormattedEndDatetime = moment(formattedEndDatetime, "MMMM D, YYYY h:mm A");
+
+                    const remainingSecondsStart = moment(item.start_date).diff(now, 'seconds');                    
+                    const remainingSecondss = moment(item.end_dates).diff(now, 'seconds');
+                    var past;
+                    if(remainingSecondsStart <= 0 && item.room_status != 3){
+                        //console.log("step 1.1 room name: ", item.room_name);
+                        const hours = Math.floor(remainingSecondss / 3600);
+                        const minutes = Math.floor((remainingSecondss % 3600) / 60);
+                        const seconds = remainingSecondss % 60;
+                        var remainingTimes = `${hours}:${minutes}:${seconds}`;
+                        past = 1;
+                        //console.log("step 1.2 remainingTimes: ", remainingTimes);
+                    }else{
+                        // console.log("step 1.1s room name: ", item.room_name);
+                        // console.log("step 1.2s remainingTimes: ", remainingTimes);
+                        past = 0;
+                    }
+
+                    // if(item.remaining_duration == 86400 && item.room_status == 0){
+                    //     remainingTimes = '24:00:00';
+                    // }
+
+                    var formattedCountDownTime = "";
+                    if(item.last_count_down_time != null && item.room_status != 4){
+                        formattedCountDownTime = formatCountdownTime(item.last_count_down_time);
+                    }else{
+                    }
+
+                    // if (remainingTimes === 'NaN:NaN:NaN' ||  item.room_status != 4) {
+                    //     // If remainingTimes is NaN or negative, set it to "24:00:00"
+                    //     remainingTimes = '24:00:00';
+                    //   }
+                      var statusActivate = 0;
+                      if(remainingSecondss < 0 && item.room_status != 4 && item.room_status != 1  && item.room_status != 5){
+                        // console.log("access the door");
+                        //console.log("step 1 room name: ", item.room_name);
+                        remainingTimes = '24:00:00';
+                      }
 
 
-                const endDatetime = moment(item.end_dates).toDate();
-                const startDatetime = moment(item.start_date).toDate();
+                      if(remaining_duration_check > 0 && item.room_status != 4 && item.last_count_down_time == ""){
+                        // console.log("update 1");
+                        // console.log("room name: ", item.room_name);
+                        //console.log("step 2 room name: ", item.room_name);
+                        Axios.post("https://web-intractive-system-app-api.onrender.com/room/remainingtime", {
+                            id: item.id,
+                        },{
+                            headers: { Authorization: `Bearer ${token}` }
+                        }).then(response2 => {
+                            // console.log("success");
+                        })
+                        .catch(error2 => {
+                                console.log("Error exception on update room setting: ", error2);
+                        })
+                      }
+                      else if(item.remaining_duration != 0 && item.room_status != 4  && item.last_count_down_time == ""){
+                        //console.log("update 2");
+                        //console.log("step 3 room name: ", item.room_name);
+                        // console.log("==========================");
+                        // console.log("room name: ", item.room_name);
+                        Axios.post("https://web-intractive-system-app-api.onrender.com/room/zeroRemaining", {
+                            id: item.id,
+                        },{
+                            headers: { Authorization: `Bearer ${token}` }
+                        }).then(response2 => {
+                            console.log("success");
+                        })
+                        .catch(error2 => {
+                                console.log("Error exception on update room setting: ", error2);
+                        })
+                      }
+                    
+                    // const isActive = remainingTimes !== '24:00:00';
 
-                //  console.log("==========================");
-                //  console.log("room name: ", item.room_name);
-                const startDateValue = moment(item.start_date).toDate();
-                const formattedStartDatetime = moment(startDateValue).format("MMMM D, YYYY h:mm A");
-                const endDaateValue = moment(item.end_dates).toDate();
-                // console.log("endDateValue: ", endDaateValue);
-                // console.log("current datetime: ", new Date());
-                const currentDate = new Date();
-                //  console.log("remaining duration: ", Math.floor((endDaateValue - currentDate) / 1000));
-                const formattedEndDatetime = moment(endDaateValue).format("MMMM D, YYYY h:mm A");
-                const remaining_duration_check = Math.floor((endDaateValue - currentDate) / 1000);
-                // console.log("start datex: ", item.end_dates);
-                // console.log("end date: ", formattedEndDatetime);
-                //  console.log("===========================");
-                
-                // const formattedEndDatetimess = moment.utc(endDatetime).format('DD/MM/YYYY HH:mm:ss a');
-                // const formattedStartDatetime = moment.utc(item.start_date).format('DD/MM/YYYY HH:mm:ss a');
-                // //============================
-                const now = moment();
-                // console.log("room name: ", item.room_name);
-                // console.log("formattedEndDatetime: ", formattedEndDatetime);
-                // console.log("formattedEndDatetimess: ", formattedEndDatetimess);
-                const remainingSecondsStart = moment(formattedStartDatetime).diff(now, 'seconds');                    
-                const remainingSecondss = moment(formattedEndDatetime).diff(now, 'seconds');
-
-                if(remainingSecondsStart <= 0){
-
-                      // console.log("========================================");
-                // console.log("end datetime: ", endDatetime);
-                // console.log("remaining seconds: ", remainingSecondss);
-                const hours = Math.floor(remainingSecondss / 3600);
-                // console.log("remaining seconds: ", hours);
-                const minutes = Math.floor((remainingSecondss % 3600) / 60);
-                // console.log("remaining seconds: ", minutes);
-                const seconds = remainingSecondss % 60;
-                // console.log("remaining seconds: ", seconds);
-
-                var remainingTimes = `${hours}:${minutes}:${seconds}`;
-                // console.log("remaining times: ", remainingTimes);
-                // console.log("room name: ", item.room_name);
-                // console.log("========================================");
-            //   if (remainingTimes < 0) {
-            //     // If remainingSeconds is negative (in the past), set it to "24:00:00"
-            //     return {
-            //       ...item,
-            //       remaining_time: '24:00:00',
-            //     };
-            //   } else {
-            //     // If remainingSeconds is positive (in the future), format it as HH:MM:SS
-            //     return {
-            //       ...item,
-            //       remaining_time: remainingTimes
-            //     };
-            //   }
-
-                }else{
-
-                    var remainingTimes = "24:00:00";
-
-                }
-                
-                var formattedCountDownTime = "";
-                if(item.last_count_down_time != null){
-                    formattedCountDownTime = formatCountdownTime(item.last_count_down_time);
-                }
-                
-            if (remainingTimes === 'NaN:NaN:NaN' || item.active_status == 1) {
-                // If remainingTimes is NaN or negative, set it to "24:00:00"
-                remainingTimes = '24:00:00';
-              }
-              var statusActivate = 0;
-              if(remainingSecondss < 0){
-                console.log("access the door");
-                remainingTimes = '24:00:00';
-                statusActivate = 3;
-              }
-
-
-              if(remaining_duration_check > 0){
-                //console.log("room name: ", item.room_name);
-                Axios.post("https://web-intractive-system-app-api.onrender.com/room/remainingtime", {
-                    id: item.id,
-                },{
-                    headers: { Authorization: `Bearer ${token}` }
-                }).then(response2 => {
-                    console.log("success");
-                })
-                .catch(error2 => {
-                        console.log("Error exception on update room setting: ", error2);
-                })
-              }else if(item.remaining_duration != 0){
-                console.log("==========================");
-                console.log("room name: ", item.room_name);
-                Axios.post("https://web-intractive-system-app-api.onrender.com/room/zeroRemaining", {
-                    id: item.id,
-                },{
-                    headers: { Authorization: `Bearer ${token}` }
-                }).then(response2 => {
-                    console.log("success");
-                })
-                .catch(error2 => {
-                        console.log("Error exception on update room setting: ", error2);
-                })
-              }
-            
-            const isActive = remainingTimes !== '24:00:00';
-            //console.log("TypeError: Cannot read properties of undefined (reading 'split')", item.last_count_down_time);
-            
-            return {
-                ...item,
-                remaining_time: remainingTimes,
-                roomStatus: isActive ? 1 : 0, // Set roomStatus to 1 if active, 0 if not
-                local_format_end_date: formattedEndDatetime,
-                local_format_start_date: formattedStartDatetime,
-                status_Activate: statusActivate,
-                last_countdown_time: formattedCountDownTime, // Format last_countdown_time
-              };
-            });
-            return updatedRoom;
-          });
+                    return {
+                        ...item,
+                        remaining_time: remainingTimes,
+                        local_format_end_date: formattedEndDatetime,
+                        local_format_start_date: formattedStartDatetime,
+                        status_Activate: statusActivate,
+                        last_countdown_time: formattedCountDownTime, // Format last_countdown_time
+                        pastStatus: past
+                      };
+                    });
+                    return updatedRoom;
+                  });
         }, 1000);
-      
+
         return () => {
-          clearInterval(interval);
+            clearInterval(interval);
         };
       }, []);
-      
+
 
       function formatCountdownTime(timeString) {
         const parts = timeString.split(':');
@@ -188,16 +156,9 @@ export const Dashboard = () => {
       }
 
 
-    if (token) {
-        // Token exists in localStorage
-        // console.log('Token:', token);
-    } else {
-        // Token doesn't exist in localStorage
-        console.log('Token not found');
-    };
 
 
-    const getAllRoom = (isRefresh) => {
+      const getAllRoom = (isRefresh) => {
 
         // console.log("this is the result of isRefresh: ", isRefresh);
 
@@ -206,7 +167,7 @@ export const Dashboard = () => {
         })
         .then(response => {
             // console.log('this is the room resposne: ', response.data);
-            console.log("isRefresh: ", isRefresh);
+            // console.log("isRefresh: ", isRefresh);
             setRoom(response.data);
             // console.log("this is the response data from dashboard: ", response.data['end_dates']);
             if(isRefresh === true){
@@ -227,8 +188,9 @@ export const Dashboard = () => {
     };
 
 
+
     const getUserById = (userId) => {
-        console.log("this is the userid from getUserByid: ", userId);
+        // console.log("this is the userid from getUserByid: ", userId);
         // console.log("this is the userId: ", userId);
         Axios.get(`https://web-intractive-system-app-api.onrender.com/user/get/${userId}`, {
           headers: { Authorization: `Bearer ${token}` }
@@ -243,6 +205,7 @@ export const Dashboard = () => {
           console.log('Error while fetching user:', error);
         })
     };
+
 
     const toggleModal = () => {
         setShowModal(!showModal);
@@ -272,16 +235,15 @@ export const Dashboard = () => {
         })
     };
 
-
     return(
         <div>
             <ToastContainer />
             <Loading show={loading}/>
             <div style={{ paddingTop: '95px' }}>
-                <div className="container dashboard-container">
-                    <Navbar onShowModal={toggleModal}  username={ username? username:''} onRefresh={() => getAllRoom(false)} isRoles = {roles} />
-                    <div className="table-container">
-                        {roles === 'admin' ? (
+            <div className="container dashboard-container">
+                <Navbar onShowModal={toggleModal}  username={ username? username:''} onRefresh={() => getAllRoom(false)} isRoles = {roles} />
+                <div className="table-container">
+                    {roles === 'admin' ? (
                         // Render admin table if roles are 'admin'
                             <Table data={room} onRefresh={() => getAllRoom(false)} showToast={showToast} />
                         ) : roles === 'superadmin' ? (
@@ -292,13 +254,10 @@ export const Dashboard = () => {
                         ) : (
                         // Render some default content when the role is neither 'admin' nor 'superadmin'
                         <p>Unknown user role</p>
-                        )}
-                    </div>
+                    )}
                 </div>
             </div>
-            {/* <Toast show={toastShow} message={toastMessage} type={toastType} title={toastHeader} /> */}
-           
+            </div>
         </div>
     )
-    
 }

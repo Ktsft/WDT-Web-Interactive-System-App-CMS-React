@@ -5,7 +5,13 @@ import moment from 'moment';
 
 import Axios from 'axios';
 
-
+function formatDate(dateString) {
+  if (dateString == null){
+    return ""
+  }else{
+    return moment(dateString).format("MMMM D, YYYY h:mm A");
+  }
+}
 
 function secondsToHHMMSS(seconds) {
     const hours = Math.floor(seconds / 3600);
@@ -56,7 +62,7 @@ function secondsToHHMMSS(seconds) {
     
 // }
 
-function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClickSetting,   onSwitchClickSetting }) {
+function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClickSetting,  onSwitchClickSetting }) {
   // const [remainingTime, setRemainingTime] = useState(calculateRemainingTimes(item));
   
   const [roomStatus, setRoomStatus] = useState(item.room_status);
@@ -67,6 +73,10 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClic
   const [modalTitle, setModalTitle] = useState(''); // Title for the modal
   const [modalWidth, setModalWidth] = useState(''); // Width for the modal
   const [modalHeight, setModalHeight] = useState(''); // Height for the modal
+
+
+
+
   // useEffect(() => {
   //   // Create an interval to update the remaining times every 1000 seconds
   //   const interval = setInterval(() => {
@@ -233,27 +243,32 @@ function TableRow({ item, onRefresh, onRowClick, showToast, openModal, onRowClic
     <tr>
       <th scope="row">{item.id}</th>
       <td>{item.room_name}</td>
-      <td>Wedding room</td>
-      <td> {item.room_status === 0 ? '00:00:00' :
-      (item.active_status === 1 ? item.last_countdown_time : item.remaining_time || '0:0:0.000000')
-      }</td>
-      <td style={{width: '270px'}}>
-        {item.room_status === 0 ? '-' : 
-        (item.start_date !== 'Invalid date' && item.local_format_end_date !== 'Invalid date' ? 
-          `${item.local_format_start_date} - ${item.local_format_end_date}` :
-          '-')
-        }
-        </td>
+      <td>{item.room_type}</td>
+      <td>  {item.room_status === 0
+        ? '00:00:00'
+        : item.room_status === 5
+        ? item.last_count_down_time
+        :item.room_status === 1 && item.remaining_duration === 86400
+        ? '24:00:00'
+        : item.room_status === 4 || item.room_stauts === 3 || item.pastStatus === 0
+        ? '24:00:00'
+        : item.remaining_time
+        }</td>
+     <td style={{width: '270px'}}>
+     {item.start_date && item.end_dates && item.active_status === 1 ? 
+     "-" : 
+     `${formatDate(item.start_date)} - ${formatDate(item.end_dates)}`}
+    </td>
       <td>
          <div className="form-check form-switch">
-            <input
-              type="checkbox"
-              className="form-check-input"
-              role="switch"
-              onChange={() => onSwitchClickSetting(item.id, item.roomStatus, item.status_Activate, item.last_remaining_countDown, item.remaining_time)}
-              checked={item.roomStatus}
-              id={`switch_${item.id}`}
-            />
+         <input 
+            type="checkbox"
+            className="form-check-input"
+            role="switch"
+            onChange={() => onSwitchClickSetting(item.id, item.room_status, item.last_remaining_countDown, item.remaining_time)}
+            checked={item.pastStatus === 0 ? false : (item.room_status === 1 && item.remaining_duration !== 86400)}
+            id={`switch_${item.id}`}
+          />
             <label className="custom-control-label" htmlFor={`switch_${item.id}`}></label>
           </div>
       </td>
