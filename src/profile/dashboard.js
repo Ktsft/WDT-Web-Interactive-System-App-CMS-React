@@ -36,11 +36,281 @@ export const Dashboard = () => {
       }, [token, user]); // This effect runs only once when the component mounts 
 
 
-      useEffect(() => {
-        const interval = setInterval(() => {
-            setRoom((prevRoom) => {
+    // //   useEffect(() => {
+    // //     const interval = setInterval(() => {
+    // //         setRoom((prevRoom) => {
 
-                const updatedRoom = prevRoom.map((item) => {
+    // //             const updatedRoom = prevRoom.map((item) => {
+    // //                 const now = moment();
+    // //                 const currentDate = new Date();
+    // //                 const startDateValue = moment(item.start_date).toDate();
+    // //                 const formattedStartDatetime = moment(startDateValue).format("MMMM D, YYYY h:mm A");
+    // //                 const endDaateValue = moment(item.end_dates).toDate();
+    // //                 const formattedEndDatetime = moment(endDaateValue).format("MMMM D, YYYY h:mm A");
+    // //                 const remaining_duration_check = Math.floor((endDaateValue - currentDate) / 1000);
+    // //                 // const momentFormattedStartDatetime = moment(formattedStartDatetime, "MMMM D, YYYY h:mm A");
+    // //                 // const momentFormattedEndDatetime = moment(formattedEndDatetime, "MMMM D, YYYY h:mm A");
+
+    // //                 const remainingSecondsStart = moment(item.start_date).diff(now, 'seconds');                    
+    // //                 const remainingSecondss = moment(item.end_dates).diff(now, 'seconds');
+    // //                 var past;
+    // //                 if(remainingSecondsStart <= 0 && item.room_status != 3){
+    // //                     const hours = Math.floor(remainingSecondss / 3600);
+    // //                     const minutes = Math.floor((remainingSecondss % 3600) / 60);
+    // //                     const seconds = remainingSecondss % 60;
+    // //                     var remainingTimes = `${hours}:${minutes}:${seconds}`;
+    // //                     past = 1;
+    // //                     //console.log("step 1.2 remainingTimes: ", remainingTimes);
+    // //                 }else{
+    // //                     // console.log("step 1.1s room name: ", item.room_name);
+    // //                     // console.log("step 1.2s remainingTimes: ", remainingTimes);
+    // //                     past = 0;
+    // //                 }
+
+    // //                 // if(item.remaining_duration == 86400 && item.room_status == 0){
+    // //                 //     remainingTimes = '24:00:00';
+    // //                 // }
+
+    // //                 if (remaining_duration_check < 0 && item.room_status != 0){
+    // //                     console.log("room names test: ", item.room_name);
+    // //                     Axios.post("https://web-intractive-system-app-api.onrender.com/room/zeroRemaining", {
+    // //                         id: item.id,
+    // //                     },{
+    // //                         headers: { Authorization: `Bearer ${token}` }
+    // //                     }).then(response2 => {
+    // //                         console.log("success");
+    // //                     })
+    // //                     .catch(error2 => {
+    // //                             console.log("Error exception on update room setting: ", error2);
+    // //                     })
+    // //                 }
+
+    // //                 var formattedCountDownTime = "";
+    // //                 if(item.last_count_down_time != null && item.room_status != 4){
+    // //                     formattedCountDownTime = formatCountdownTime(item.last_count_down_time);
+    // //                 }else{
+    // //                 }
+
+    // //                 // if (remainingTimes === 'NaN:NaN:NaN' ||  item.room_status != 4) {
+    // //                 //     // If remainingTimes is NaN or negative, set it to "24:00:00"
+    // //                 //     remainingTimes = '24:00:00';
+    // //                 //   }
+    // //                 var statusActivate = 0;
+    // //                 //   if(remainingSecondss < 0 && item.room_status != 4 && item.room_status != 1  && item.room_status != 5){
+    // //                 //     // console.log("access the door");
+    // //                 //     //console.log("step 1 room name: ", item.room_name);
+    // //                 //     remainingTimes = '24:00:00';
+    // //                 //   }
+
+
+    // //                 //   if(remaining_duration_check > 0 && item.room_status != 4 && item.last_count_down_time == ""){
+    // //                 //     console.log("update 1");
+                        
+    // //                 //     // console.log("room name: ", item.room_name);
+    // //                 //     //console.log("step 2 room name: ", item.room_name);
+    // //                 //     Axios.post("https://web-intractive-system-app-api.onrender.com/room/remainingtime", {
+    // //                 //         id: item.id,
+    // //                 //     },{
+    // //                 //         headers: { Authorization: `Bearer ${token}` }
+    // //                 //     }).then(response2 => {
+    // //                 //         // console.log("success");
+    // //                 //     })
+    // //                 //     .catch(error2 => {
+    // //                 //             console.log("Error exception on update room setting: ", error2);
+    // //                 //     })
+    // //                 //   }
+    // //                 //   else if(remaining_duration_check < 0 && item.room_status != 4  &&  item.last_count_down_time == ""){
+    // //                 //     // console.log("update 2");
+    // //                 //     // console.log("room name: ", item.room_name);
+    // //                 //     // console.log("==========================");
+    // //                 //     // console.log("room name: ", item.room_name);
+    // //                     // Axios.post("https://web-intractive-system-app-api.onrender.com/room/zeroRemaining", {
+    // //                     //     id: item.id,
+    // //                     // },{
+    // //                     //     headers: { Authorization: `Bearer ${token}` }
+    // //                     // }).then(response2 => {
+    // //                     //     console.log("success");
+    // //                     // })
+    // //                     // .catch(error2 => {
+    // //                     //         console.log("Error exception on update room setting: ", error2);
+    // //                     // })
+    // //                 //   }else if(remaining_duration_check < 0){
+    // //                 //     // console.log("room name minus: ", item.room_name);
+    // //                 //     Axios.post("https://web-intractive-system-app-api.onrender.com/room/zeroRemaining", {
+    // //                 //         id: item.id,
+    // //                 //     },{
+    // //                 //         headers: { Authorization: `Bearer ${token}` }
+    // //                 //     }).then(response2 => {
+    // //                 //         console.log("success");
+    // //                 //     })
+    // //                 //     .catch(error2 => {
+    // //                 //             console.log("Error exception on update room setting: ", error2);
+    // //                 //     })
+    // //                 //   }
+                      
+                    
+    // //                 // const isActive = remainingTimes !== '24:00:00';
+
+    // //                 return {
+    // //                     ...item,
+    // //                     remaining_time: remainingTimes,
+    // //                     local_format_end_date: formattedEndDatetime,
+    // //                     local_format_start_date: formattedStartDatetime,
+    // //                     status_Activate: statusActivate,
+    // //                     last_countdown_time: formattedCountDownTime, // Format last_countdown_time
+    // //                     pastStatus: past
+    // //                   };
+    // //                 });
+    // //                 return updatedRoom;
+    // //               });
+    // //     }, 1000);
+
+    // //     return () => {
+    // //         clearInterval(interval);
+    // //     };
+    // //   }, []);
+
+
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         setRoom((prevRoom) => {
+
+    //             const updatedRoom = prevRoom.map((item) => {
+    //                 const now = moment();
+    //                 const currentDate = new Date();
+    //                 const startDateValue = moment(item.start_date).toDate();
+    //                 const formattedStartDatetime = moment(startDateValue).format("MMMM D, YYYY h:mm A");
+    //                 const endDaateValue = moment(item.end_dates).toDate();
+    //                 const formattedEndDatetime = moment(endDaateValue).format("MMMM D, YYYY h:mm A");
+    //                 const remaining_duration_check = Math.floor((endDaateValue - currentDate) / 1000);
+    //                 // const momentFormattedStartDatetime = moment(formattedStartDatetime, "MMMM D, YYYY h:mm A");
+    //                 // const momentFormattedEndDatetime = moment(formattedEndDatetime, "MMMM D, YYYY h:mm A");
+
+    //                 const remainingSecondsStart = moment(item.start_date).diff(now, 'seconds');                    
+    //                 const remainingSecondss = moment(item.end_dates).diff(now, 'seconds');
+    //                 var past;
+    //                 if(remainingSecondsStart <= 0 && item.room_status != 3){
+    //                     const hours = Math.floor(remainingSecondss / 3600);
+    //                     const minutes = Math.floor((remainingSecondss % 3600) / 60);
+    //                     const seconds = remainingSecondss % 60;
+    //                     var remainingTimes = `${hours}:${minutes}:${seconds}`;
+    //                     past = 1;
+    //                     //console.log("step 1.2 remainingTimes: ", remainingTimes);
+    //                 }else{
+    //                     // console.log("step 1.1s room name: ", item.room_name);
+    //                     // console.log("step 1.2s remainingTimes: ", remainingTimes);
+    //                     past = 0;
+    //                 }
+
+    //                 // if(item.remaining_duration == 86400 && item.room_status == 0){
+    //                 //     remainingTimes = '24:00:00';
+    //                 // }
+
+    //                 if (remaining_duration_check < 0 && item.room_status != 0){
+    //                     console.log("room names test: ", item.room_name);
+    //                     Axios.post("https://web-intractive-system-app-api.onrender.com/room/zeroRemaining", {
+    //                         id: item.id,
+    //                     },{
+    //                         headers: { Authorization: `Bearer ${token}` }
+    //                     }).then(response2 => {
+    //                         console.log("success");
+    //                     })
+    //                     .catch(error2 => {
+    //                             console.log("Error exception on update room setting: ", error2);
+    //                     })
+    //                 }
+
+    //                 var formattedCountDownTime = "";
+    //                 if(item.last_count_down_time != null && item.room_status != 4){
+    //                     formattedCountDownTime = formatCountdownTime(item.last_count_down_time);
+    //                 }else{
+    //                 }
+
+    //                 // if (remainingTimes === 'NaN:NaN:NaN' ||  item.room_status != 4) {
+    //                 //     // If remainingTimes is NaN or negative, set it to "24:00:00"
+    //                 //     remainingTimes = '24:00:00';
+    //                 //   }
+    //                 var statusActivate = 0;
+    //                 //   if(remainingSecondss < 0 && item.room_status != 4 && item.room_status != 1  && item.room_status != 5){
+    //                 //     // console.log("access the door");
+    //                 //     //console.log("step 1 room name: ", item.room_name);
+    //                 //     remainingTimes = '24:00:00';
+    //                 //   }
+
+
+    //                 //   if(remaining_duration_check > 0 && item.room_status != 4 && item.last_count_down_time == ""){
+    //                 //     console.log("update 1");
+                        
+    //                 //     // console.log("room name: ", item.room_name);
+    //                 //     //console.log("step 2 room name: ", item.room_name);
+    //                 //     Axios.post("https://web-intractive-system-app-api.onrender.com/room/remainingtime", {
+    //                 //         id: item.id,
+    //                 //     },{
+    //                 //         headers: { Authorization: `Bearer ${token}` }
+    //                 //     }).then(response2 => {
+    //                 //         // console.log("success");
+    //                 //     })
+    //                 //     .catch(error2 => {
+    //                 //             console.log("Error exception on update room setting: ", error2);
+    //                 //     })
+    //                 //   }
+    //                 //   else if(remaining_duration_check < 0 && item.room_status != 4  &&  item.last_count_down_time == ""){
+    //                 //     // console.log("update 2");
+    //                 //     // console.log("room name: ", item.room_name);
+    //                 //     // console.log("==========================");
+    //                 //     // console.log("room name: ", item.room_name);
+    //                     // Axios.post("https://web-intractive-system-app-api.onrender.com/room/zeroRemaining", {
+    //                     //     id: item.id,
+    //                     // },{
+    //                     //     headers: { Authorization: `Bearer ${token}` }
+    //                     // }).then(response2 => {
+    //                     //     console.log("success");
+    //                     // })
+    //                     // .catch(error2 => {
+    //                     //         console.log("Error exception on update room setting: ", error2);
+    //                     // })
+    //                 //   }else if(remaining_duration_check < 0){
+    //                 //     // console.log("room name minus: ", item.room_name);
+    //                 //     Axios.post("https://web-intractive-system-app-api.onrender.com/room/zeroRemaining", {
+    //                 //         id: item.id,
+    //                 //     },{
+    //                 //         headers: { Authorization: `Bearer ${token}` }
+    //                 //     }).then(response2 => {
+    //                 //         console.log("success");
+    //                 //     })
+    //                 //     .catch(error2 => {
+    //                 //             console.log("Error exception on update room setting: ", error2);
+    //                 //     })
+    //                 //   }
+                      
+                    
+    //                 // const isActive = remainingTimes !== '24:00:00';
+
+    //                 return {
+    //                     ...item,
+    //                     remaining_time: remainingTimes,
+    //                     local_format_end_date: formattedEndDatetime,
+    //                     local_format_start_date: formattedStartDatetime,
+    //                     status_Activate: statusActivate,
+    //                     last_countdown_time: formattedCountDownTime, // Format last_countdown_time
+    //                     pastStatus: past
+    //                   };
+    //                 });
+    //                 return updatedRoom;
+    //               });
+    //     }, 1000);
+
+    //     return () => {
+    //         clearInterval(interval);
+    //     };
+    //   }, []);
+
+
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const updatedRoom = await Promise.all(room.map(async (item) => {
                     const now = moment();
                     const currentDate = new Date();
                     const startDateValue = moment(item.start_date).toDate();
@@ -48,100 +318,89 @@ export const Dashboard = () => {
                     const endDaateValue = moment(item.end_dates).toDate();
                     const formattedEndDatetime = moment(endDaateValue).format("MMMM D, YYYY h:mm A");
                     const remaining_duration_check = Math.floor((endDaateValue - currentDate) / 1000);
-                    // const momentFormattedStartDatetime = moment(formattedStartDatetime, "MMMM D, YYYY h:mm A");
-                    // const momentFormattedEndDatetime = moment(formattedEndDatetime, "MMMM D, YYYY h:mm A");
-
-                    const remainingSecondsStart = moment(item.start_date).diff(now, 'seconds');                    
+    
+                    const remainingSecondsStart = moment(item.start_date).diff(now, 'seconds');
                     const remainingSecondss = moment(item.end_dates).diff(now, 'seconds');
                     var past;
-                    if(remainingSecondsStart <= 0 && item.room_status != 3){
-                        //console.log("step 1.1 room name: ", item.room_name);
+                    if (remainingSecondsStart <= 0 && item.room_status !== 3) {
                         const hours = Math.floor(remainingSecondss / 3600);
                         const minutes = Math.floor((remainingSecondss % 3600) / 60);
                         const seconds = remainingSecondss % 60;
                         var remainingTimes = `${hours}:${minutes}:${seconds}`;
                         past = 1;
-                        //console.log("step 1.2 remainingTimes: ", remainingTimes);
-                    }else{
-                        // console.log("step 1.1s room name: ", item.room_name);
-                        // console.log("step 1.2s remainingTimes: ", remainingTimes);
+                    } else {
                         past = 0;
                     }
-
-                    // if(item.remaining_duration == 86400 && item.room_status == 0){
-                    //     remainingTimes = '24:00:00';
-                    // }
-
-                    var formattedCountDownTime = "";
-                    if(item.last_count_down_time != null && item.room_status != 4){
-                        formattedCountDownTime = formatCountdownTime(item.last_count_down_time);
-                    }else{
+    
+                    if (remaining_duration_check < 0 && item.room_status !== 0) {
+                        console.log("room names test: ", item.room_name);
+                        await updateZeroRemaining(item.id);
+                    }else if(remaining_duration_check > 0 && item.room_status != 4 && item.last_count_down_time == ""){
+                        await updateActiveRoom(item.id);
                     }
-
-                    // if (remainingTimes === 'NaN:NaN:NaN' ||  item.room_status != 4) {
-                    //     // If remainingTimes is NaN or negative, set it to "24:00:00"
-                    //     remainingTimes = '24:00:00';
-                    //   }
-                      var statusActivate = 0;
-                      if(remainingSecondss < 0 && item.room_status != 4 && item.room_status != 1  && item.room_status != 5){
-                        // console.log("access the door");
-                        //console.log("step 1 room name: ", item.room_name);
-                        remainingTimes = '24:00:00';
-                      }
-
-
-                      if(remaining_duration_check > 0 && item.room_status != 4 && item.last_count_down_time == ""){
-                        // console.log("update 1");
-                        // console.log("room name: ", item.room_name);
-                        //console.log("step 2 room name: ", item.room_name);
-                        Axios.post("https://web-intractive-system-app-api.onrender.com/room/remainingtime", {
-                            id: item.id,
-                        },{
-                            headers: { Authorization: `Bearer ${token}` }
-                        }).then(response2 => {
-                            // console.log("success");
-                        })
-                        .catch(error2 => {
-                                console.log("Error exception on update room setting: ", error2);
-                        })
-                      }
-                      else if(item.remaining_duration != 0 && item.room_status != 4  && item.last_count_down_time == ""){
-                        //console.log("update 2");
-                        //console.log("step 3 room name: ", item.room_name);
-                        // console.log("==========================");
-                        // console.log("room name: ", item.room_name);
-                        Axios.post("https://web-intractive-system-app-api.onrender.com/room/zeroRemaining", {
-                            id: item.id,
-                        },{
-                            headers: { Authorization: `Bearer ${token}` }
-                        }).then(response2 => {
-                            console.log("success");
-                        })
-                        .catch(error2 => {
-                                console.log("Error exception on update room setting: ", error2);
-                        })
-                      }
-                    
-                    // const isActive = remainingTimes !== '24:00:00';
-
+    
+                    var formattedCountDownTime = "";
+                    if (item.last_count_down_time !== null && item.room_status !== 4) {
+                        formattedCountDownTime = formatCountdownTime(item.last_count_down_time);
+                    } else {
+                    }
+    
+                    var statusActivate = 0;
+    
                     return {
                         ...item,
                         remaining_time: remainingTimes,
                         local_format_end_date: formattedEndDatetime,
                         local_format_start_date: formattedStartDatetime,
                         status_Activate: statusActivate,
-                        last_countdown_time: formattedCountDownTime, // Format last_countdown_time
+                        last_countdown_time: formattedCountDownTime,
                         pastStatus: past
-                      };
-                    });
-                    return updatedRoom;
-                  });
-        }, 1000);
-
+                    };
+                }));
+                setRoom(updatedRoom);
+            } catch (error) {
+                console.error("Error in fetchData:", error);
+            }
+        };
+    
+        const interval = setInterval(fetchData, 1000);
+    
         return () => {
             clearInterval(interval);
         };
-      }, []);
+    }, [room]);
+    
+    const updateZeroRemaining = async (roomId) => {
+        try {
+            const response = await Axios.post(
+                "https://web-intractive-system-app-api.onrender.com/room/zeroRemaining",
+                { id: roomId },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            console.log("Success updating zeroRemaining:", response.data);
+            // Add your additional asynchronous operations here
+        } catch (error) {
+            console.log("Error updating zeroRemaining:", error);
+        }
+    };
+    
+
+    const updateActiveRoom = async(roomId) => {
+        try{
+            Axios.post("https://web-intractive-system-app-api.onrender.com/room/remainingtime", {
+                id: roomId,
+            },{
+                headers: { Authorization: `Bearer ${token}` }
+            }).then(response2 => {
+                // console.log("success");
+            })
+            .catch(error2 => {
+                    console.log("Error exception on update room setting: ", error2);
+            })
+        }catch(error){
+            console.log("Error updating active remaining:", error);
+        }
+    }
 
 
       function formatCountdownTime(timeString) {
