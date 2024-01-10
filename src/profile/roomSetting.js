@@ -4,7 +4,6 @@ import { Button, Modal } from '../components/index';
 import '../styles/app.css';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
-import { StyledEngineProvider } from '@mui/material/styles';
 import Slider from '@mui/material/Slider';
 import Box from '@mui/material/Box';
 import Axios from 'axios'; // Import Axios
