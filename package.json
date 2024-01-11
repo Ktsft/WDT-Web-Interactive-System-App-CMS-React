@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.15.4",
     "abab": "^2.0.6",
     "accepts": "^1.3.8",
     "acorn": "^8.10.0",
@@ -786,6 +789,7 @@
     "stackframe": "^1.3.4",
     "statuses": "^2.0.1",
     "stop-iteration-iterator": "^1.0.0",
+    "string_decoder": "^1.3.0",
     "string-length": "^4.0.2",
     "string-natural-compare": "^3.0.1",
     "string-width": "^4.2.3",
@@ -794,7 +798,6 @@
     "string.prototype.trimend": "^1.0.6",
     "string.prototype.trimstart": "^1.0.7",
     "stringify-object": "^3.3.0",
-    "string_decoder": "^1.3.0",
     "strip-ansi": "^6.0.1",
     "strip-bom": "^4.0.0",
     "strip-comments": "^2.0.1",
@@ -934,10 +937,27 @@
     "yargs-parser": "^20.2.9",
     "yocto-queue": "^0.1.0"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/react": "^14.1.2"
+  }
 }
